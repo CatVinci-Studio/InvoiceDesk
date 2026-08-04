@@ -99,7 +99,8 @@ updates itself and offers them in a strip along the bottom of the window.
    wrong bucket, then hit 重新分类全部发票.
 4. Create a sheet under **报销单**, tick the invoices to claim, and export.
 
-The full manual is [docs/MANUAL.md](./docs/MANUAL.md) (Chinese).
+The full manual is [docs/MANUAL.md](./docs/MANUAL.md) (Chinese), also as a
+[printable PDF](./docs/智票使用说明书.pdf).
 
 ## Build from source
 

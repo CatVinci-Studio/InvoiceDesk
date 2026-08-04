@@ -25,3 +25,7 @@ dist-ssr
 # never let one reach a commit.
 samples/
 *.ofd
+
+# The manual PDF is generated but committed - see scripts/build-manual-pdf.sh.
+# Its intermediate HTML is not.
+*.manual.html

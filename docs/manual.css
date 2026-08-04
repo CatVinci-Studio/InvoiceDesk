@@ -1,0 +1,227 @@
+/* Print styling for the manual PDF (docs/MANUAL.md → 智票使用说明书.pdf).
+ *
+ * Built for reading on paper and on a phone screen, which is where a manual
+ * actually gets used - not for matching the app. So: a measure that stays
+ * readable, generous line height for dense Chinese text, and tables that
+ * survive a page break.
+ *
+ * Regenerate with `npm run manual:pdf`. */
+
+@page {
+  size: A4;
+  margin: 20mm 18mm 18mm;
+}
+
+:root {
+  --ink: #1f1f1f;
+  --muted: #6b6b6b;
+  --rule: #ddd9d2;
+  --accent: #2f5bc4;
+  --surface: #f7f5f1;
+}
+
+body {
+  /* PingFang for Chinese; the Latin faces ahead of it only ever get the
+     ASCII, which keeps numbers and code from inheriting CJK metrics. */
+  font-family:
+    "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  font-size: 10.5pt;
+  /* Chinese has no word spaces and no ascender/descender rhythm to rest on,
+     so it needs more leading than Latin text at the same size. */
+  line-height: 1.85;
+  color: var(--ink);
+  margin: 0 auto;
+  max-width: 100%;
+  text-align: justify;
+  /* Never break a line inside a Latin word or a number. */
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.4;
+  font-weight: 650;
+  /* A heading stranded at the foot of a page is worse than a short page. */
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+h1 {
+  font-size: 22pt;
+  margin: 0 0 4pt;
+}
+
+h2 {
+  font-size: 15pt;
+  margin: 22pt 0 8pt;
+  padding-bottom: 5pt;
+  border-bottom: 1.5px solid var(--rule);
+  /* Deliberately NOT `break-before: page`.
+     A chapter per page is the print-book convention and it was tried first,
+     but this manual has sixteen chapters and several are half a page long -
+     forcing breaks left most of a sheet blank after 「五分钟快速上手」 and
+     after 「界面总览」, and padded the document out with white space that
+     reads as filler. The document is navigated by its linked 目录 rather
+     than by flipping, so continuous flow costs nothing and saves paper.
+     `break-after: avoid` above is what actually matters: it stops a heading
+     from being stranded at the foot of a page. */
+}
+
+h3 {
+  font-size: 12pt;
+  margin: 16pt 0 5pt;
+  color: #333;
+}
+
+h4 {
+  font-size: 10.5pt;
+  margin: 12pt 0 4pt;
+}
+
+p {
+  margin: 0 0 8pt;
+}
+
+strong {
+  font-weight: 650;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+ul,
+ol {
+  margin: 0 0 8pt;
+  padding-left: 1.6em;
+}
+
+li {
+  margin-bottom: 3pt;
+}
+
+li > p {
+  margin-bottom: 3pt;
+}
+
+/* --- Tables ---------------------------------------------------------------
+   The manual is mostly tables (formats, statuses, placeholders, error
+   causes), so they carry most of the reading load. */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8pt 0 12pt;
+  font-size: 9.5pt;
+  line-height: 1.6;
+  /* A table split across a page break loses its header; most here are short
+     enough to keep whole. */
+  break-inside: avoid;
+}
+
+th,
+td {
+  border: 1px solid var(--rule);
+  padding: 5pt 7pt;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--surface);
+  font-weight: 650;
+}
+
+/* --- Code and diagrams ----------------------------------------------------
+   The pipeline diagrams are box-drawing characters, which only line up in a
+   monospace font that has them. */
+
+code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--surface);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+pre {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 8pt 10pt;
+  overflow-x: auto;
+  break-inside: avoid;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  /* The ASCII diagrams are wide; shrink rather than wrap, because a wrapped
+     box-drawing diagram is unreadable. */
+  font-size: 7.6pt;
+  white-space: pre;
+}
+
+blockquote {
+  margin: 8pt 0;
+  padding: 6pt 12pt;
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  color: #3a3a3a;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 14pt 0;
+}
+
+/* --- Front matter --------------------------------------------------------- */
+
+.title-block {
+  text-align: center;
+  padding: 40pt 0 24pt;
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: 18pt;
+}
+
+.title-block .subtitle {
+  color: var(--muted);
+  font-size: 11pt;
+  margin-top: 6pt;
+}
+
+/* The table of contents pandoc generates. */
+#TOC {
+  break-after: page;
+}
+
+#TOC ul {
+  list-style: none;
+  padding-left: 1.2em;
+}
+
+#TOC > ul {
+  padding-left: 0;
+}
+
+#TOC a {
+  color: var(--ink);
+}
+
+/* pandoc emits the `title` metadata as a header block. It is kept in the
+   metadata because that is what becomes the PDF's document title in a
+   reader's window bar, but it must not print - MANUAL.md opens with its own
+   heading. */
+header#title-block-header {
+  display: none;
+}
