@@ -108,7 +108,7 @@ cd src-tauri && cargo test
 cd src-tauri && cargo run --example seed_sample_data
 ```
 
-发布流程见 [docs/RELEASE.md](./docs/RELEASE.md)。
+开发约定见 [CONTRIBUTING.md](./CONTRIBUTING.md)，发布流程见 [docs/RELEASE.md](./docs/RELEASE.md)。
 
 ## 技术说明
 

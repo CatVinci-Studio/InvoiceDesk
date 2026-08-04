@@ -100,6 +100,7 @@ cd src-tauri && cargo test
 
 Requires [Node.js](https://nodejs.org) 20+ and [Rust](https://rustup.rs) stable.
 macOS needs the Xcode command line tools; Windows needs the MSVC build tools.
+Development conventions: [CONTRIBUTING.md](./CONTRIBUTING.md) (Chinese).
 Release process: [docs/RELEASE.md](./docs/RELEASE.md).
 
 To see the UI with something in it, seed the ledger with synthetic invoices —
