@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ZhiShui",
+  "version": "0.0.1",
+  "identifier": "com.chengaoshen.zhishui",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "智税",
+        "width": 1180,
+        "height": 760,
+        "minWidth": 900,
+        "minHeight": 560,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "dragDropEnabled": true
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "copyright": "© 2026 CatVinci Studio",
+    "shortDescription": "发票扫描、分类统计与报销表生成",
+    "longDescription": "智税批量识别增值税电子发票（PDF / OFD）与纸质发票照片，自动分类、查重，并导出报销明细表。",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      {
+        "ext": ["ofd"],
+        "name": "OFD",
+        "description": "OFD 版式文档",
+        "role": "Viewer",
+        "mimeType": "application/ofd"
+      }
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEI1Nzc2Q0Q5RTUzQjVDQ0YKUldUUFhEdmwyV3gzdGRCK2RDNWwwUHpWTzUzZUZ4T3RRUWU5TGhJaGxTdElMNWE1VDBTc2NoUjkK",
+      "endpoints": [
+        "https://github.com/CatVinci-Studio/ZhiShui/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # `check` is typecheck + lint + test + format:check, defined once in
+      # package.json. Spelling the four out here instead would let CI and a
+      # local `npm run check` drift apart, which is the failure mode where a
+      # green machine tells you nothing.
+      - run: npm run check
+      # Separate from `check` on purpose: `typecheck` runs tsc --noEmit, so
+      # this is the only step that proves Vite can actually emit the bundle
+      # Tauri embeds as frontendDist.
+      - run: npm run build
+
+  rust:
+    # macOS rather than Linux, deliberately. A Tauri build on Ubuntu cannot
+    # link until webkit2gtk/libappindicator/librsvg are apt-installed, and
+    # ZhiShui publishes no Linux build at all (see release.yml), so that
+    # install would be several minutes per PR spent proving nothing anyone
+    # ships. Nothing else here needs Linux: rusqlite is on the `bundled`
+    # feature, so SQLite is compiled from the vendored amalgamation and no
+    # system libsqlite3 is involved on any runner.
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: src-tauri
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      # Note the path is relative to the repo root, not to the working-directory
+      # default above - this action runs outside that default.
+      #
+      # The cache earns more here than in a pure-Rust repo: rusqlite `bundled`
+      # compiles the SQLite amalgamation with cc on every cold target dir, and
+      # that is C compilation time before a single ZhiShui crate is touched.
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+      - run: cargo fmt --all -- --check
+      # --workspace so crates/aicompat is covered too, --all-targets so the
+      # test and example code is linted rather than only the lib.
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace

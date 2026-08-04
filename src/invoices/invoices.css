@@ -1,0 +1,639 @@
+/* ===========================================================================
+   发票列表与复核
+   ---------------------------------------------------------------------------
+   Everything here obeys App.css: no colours are defined in this file, only
+   the six semantic tokens are used, and colour appears in exactly three
+   places - 疑似重复 (danger), 待复核 (warn), and 校验错误 (danger). A clean
+   row is deliberately colourless.
+
+   Density is the other constraint. 28px rows, 12.5px type, hairline dividers
+   and no shadows anywhere except the two things that float above the table
+   (the drawer and the duplicate popover). A ledger is read by scanning, and
+   every box, tint and rule that is not carrying information is something the
+   eye has to skip past on its way down two hundred rows.
+   =========================================================================== */
+
+.invoices-pane {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  /* The drawer is absolutely positioned inside .invoices-body, which is
+     inside this. */
+  position: relative;
+}
+
+/* --- Toolbar -------------------------------------------------------------- */
+
+.range-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.range-dash {
+  color: var(--faint);
+  font-size: 11.5px;
+}
+
+/* A native date field is taller than our 26px inputs by default and its
+   spinner/indicator is drawn by the platform - pin the height and mute the
+   indicator so it sits level with the selects beside it. */
+.date-input {
+  width: 128px;
+  height: 26px;
+  padding: 0 6px;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.85;
+}
+
+.toolbar-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* --- Bulk action bar ------------------------------------------------------ */
+/* Only exists while something is selected, and sits between the toolbar and
+   the table so it reads as a modifier on the toolbar rather than a second
+   permanent strip of chrome. */
+
+.bulkbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.bulkbar-count {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* --- Table ---------------------------------------------------------------- */
+
+.invoices-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  position: relative;
+}
+
+.invoice-scroll {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+.invoice-table {
+  width: 100%;
+  /* Below this the columns start colliding; the container scrolls instead of
+     squeezing 发票号码 into an ellipsis. */
+  min-width: 980px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+}
+
+.invoice-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 27px;
+  padding: 0 8px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 650;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.invoice-table td {
+  height: 28px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border-soft);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.cell-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-num {
+  text-align: right;
+}
+
+/* 价税合计 is the number that actually gets reimbursed, so it is the one
+   amount that is not muted. */
+.cell-total {
+  font-weight: 600;
+}
+
+.cell-check {
+  padding-left: 10px !important;
+  padding-right: 0 !important;
+}
+
+/* The primitives have no checkbox - a selection box is chrome, not a control
+   with an identity, and one line of accent-color makes the native one match
+   the app. */
+.invoice-table input[type="checkbox"] {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  accent-color: var(--accent);
+  vertical-align: middle;
+}
+
+.th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+
+.th-sort:hover {
+  color: var(--text);
+}
+
+.th-sort-active {
+  color: var(--text);
+}
+
+.th-sort-icon {
+  transform: rotate(90deg);
+  transition: transform 0.12s ease;
+}
+
+.th-sort-icon-desc {
+  transform: rotate(-90deg);
+}
+
+/* The inactive columns keep their caret, at a weight that says "you could
+   sort by this" without competing with the one that is sorted. */
+.th-sort-icon-idle {
+  opacity: 0;
+}
+
+.th-sort:hover .th-sort-icon-idle {
+  opacity: 0.4;
+}
+
+.invoice-row:hover {
+  background: var(--hover);
+}
+
+.invoice-row-selected {
+  background: var(--active);
+}
+
+.invoice-row-selected:hover {
+  background: var(--active);
+}
+
+/* The row the drawer is showing. An inset shadow rather than a border-left,
+   so the row does not shift by a pixel when it becomes active. */
+.invoice-row-active td:first-child {
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* The other half of a suspected duplicate, while its popover is open. This
+   is the only place a whole row takes a tint. */
+.invoice-row-twin {
+  background: var(--danger-bg);
+}
+
+.invoice-row-twin td:first-child {
+  box-shadow: inset 2px 0 0 var(--danger);
+}
+
+/* Inline category editor: a select with no chrome until you point at it, so
+   a column of two hundred of them does not read as two hundred boxes. */
+.cell-category {
+  padding: 0 4px !important;
+}
+
+.cell-category .input.select {
+  width: 100%;
+  height: 24px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+}
+
+.cell-category .input.select:hover {
+  border-color: var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.cell-category .input.select:focus {
+  color: var(--text);
+}
+
+/* Left as a real table-cell (no flex): a `display: flex` td drops out of the
+   table's column sizing in some engines, and this column has a fixed width to
+   keep. The badges are inline-flex and space themselves. */
+.cell-status {
+  padding-right: 10px !important;
+}
+
+.cell-status > * + * {
+  margin-left: 4px;
+}
+
+.status-badge-button {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  background: none;
+  vertical-align: middle;
+}
+
+/* --- Duplicate popover ---------------------------------------------------- */
+/* Fixed rather than absolute: it is anchored to a badge inside a scrolling
+   table, and an absolutely positioned card would be clipped by the scroll
+   container exactly when the row is near the bottom edge - which is where
+   the user is looking when they click it. */
+
+.dup-popover {
+  position: fixed;
+  z-index: 60;
+  min-width: 280px;
+  max-width: 380px;
+  padding: 7px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.dup-popover-title {
+  padding: 2px 5px 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.dup-peer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 5px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  text-align: left;
+  font-size: 12px;
+}
+
+.dup-peer:hover {
+  background: var(--hover);
+}
+
+.dup-peer-date {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.dup-peer-seller {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dup-peer-amount {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.dup-popover-hint {
+  padding: 6px 5px 2px;
+  border-top: 1px solid var(--border-soft);
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* --- Detail drawer -------------------------------------------------------- */
+/* Slides over the table, not over the app: the list stays visible and
+   clickable behind it, because reviewing is a sequence and losing your place
+   in the list between invoices is what makes people give up halfway. */
+
+.invoice-detail {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: 448px;
+  max-width: 82%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  box-shadow: -10px 0 28px rgba(0, 0, 0, 0.1);
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px 9px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.detail-title {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.detail-number {
+  font-size: 13px;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-kind {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.detail-header-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.detail-position {
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.detail-nav,
+.detail-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  color: var(--muted);
+}
+
+.detail-nav:hover:not(:disabled),
+.detail-close:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.detail-nav:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.detail-nav-up {
+  transform: rotate(-90deg);
+}
+
+.detail-nav-down {
+  transform: rotate(90deg);
+}
+
+.detail-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 14px 24px;
+}
+
+.detail-loading {
+  padding: 24px 4px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+/* The drawer is narrower than the settings pane the group/row primitives were
+   drawn for, so the cards tighten up and the controls take a fixed width that
+   leaves the label room to breathe. */
+.invoice-detail .group-body {
+  padding: 2px 12px;
+}
+
+.invoice-detail .row {
+  padding: 8px 0;
+}
+
+.invoice-detail .row:not(.row-stacked) .row-control .input {
+  width: 178px;
+}
+
+/* --- Validation issues ---------------------------------------------------- */
+
+.detail-issues {
+  margin: 0 0 16px;
+  padding: 8px 12px;
+  list-style: none;
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+  border-radius: 8px;
+  background: var(--warn-bg);
+}
+
+.detail-issue {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--warn);
+}
+
+/* A total that does not add up is a defect, not a caution. */
+.detail-issue-error {
+  color: var(--danger);
+  font-weight: 550;
+}
+
+/* --- Provenance ----------------------------------------------------------- */
+/* Shown under every label, not only the doubtful ones: "PDF 文本层" beside a
+   number that looks right is what gives "AI 识别" beside the next one its
+   meaning. */
+
+.field-source {
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.field-source-review {
+  color: var(--warn);
+  font-size: 11px;
+}
+
+.money-input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.money-unit {
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.invoice-detail .money-input .input {
+  width: 158px;
+  text-align: right;
+}
+
+/* --- AI suggestion -------------------------------------------------------- */
+
+.suggestion {
+  padding: 10px 0 12px;
+}
+
+.suggestion-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.suggestion-reason {
+  margin: 7px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.suggestion-rule {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--code-bg);
+}
+
+.suggestion-rule-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.suggestion-condition {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.suggestion-note {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* --- Line items ----------------------------------------------------------- */
+
+.detail-items {
+  width: 100%;
+  margin: 8px 0;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+
+.detail-items th {
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.detail-items td {
+  padding: 4px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+
+.detail-items tr:last-child td {
+  border-bottom: none;
+}
+
+.item-name {
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+/* The tax authority's own classification, and the single best thing a rule
+   can match on - worth teaching the user to see. Accent rather than a
+   semantic colour: it is a landmark, not a warning. */
+.tax-category {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* --- Source --------------------------------------------------------------- */
+
+.detail-path {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.6;
+  word-break: break-all;
+  color: var(--muted);
+}
+
+/* --- Footer --------------------------------------------------------------- */
+
+.detail-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 60%, var(--bg));
+  flex-shrink: 0;
+}
+
+.detail-footer-spacer {
+  flex: 1;
+}
+
+.detail-dirty {
+  font-size: 11px;
+  color: var(--warn);
+}

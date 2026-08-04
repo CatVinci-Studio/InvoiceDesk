@@ -1,0 +1,408 @@
+/* ===========================================================================
+   分类规则
+   ---------------------------------------------------------------------------
+   Everything here is either the settings-card look borrowed from
+   primitives.css (.group / .group-body / .row) or the one thing this pane adds
+   to it: a rule rendered as a sentence.
+
+   That sentence is the whole design. Colour is spent on exactly one thing in
+   it - the keywords - because those are what the user compares against the
+   invoice in front of them; the field names and connectives are scaffolding
+   and stay muted so the eye skips them. Tokens only, no new colours.
+   =========================================================================== */
+
+.rules-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.rules-count {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.rules-body {
+  max-width: 880px;
+  padding: 16px 18px 32px;
+}
+
+.rules-intro {
+  margin: 0 4px 6px;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.rules-intro strong {
+  font-weight: 650;
+  color: var(--text);
+}
+
+.rules-intro-muted {
+  margin-bottom: 18px;
+  color: var(--faint);
+}
+
+.rules-error {
+  margin: 0 0 14px;
+  padding: 8px 11px;
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+  border-radius: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 12.5px;
+}
+
+.rules-body .empty {
+  height: auto;
+  padding: 48px 40px;
+}
+
+/* --- The list ------------------------------------------------------------- */
+
+.rule-group + .rule-group {
+  margin-top: 18px;
+}
+
+.rule-group-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  /* The category is what the user scans for, so it gets the readable size the
+     shared .group-title deliberately does not have. */
+  font-size: 12.5px;
+  color: var(--text);
+  letter-spacing: 0;
+}
+
+.rule-group-count {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--faint);
+}
+
+.rule-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+/* A stopped rule is still worth reading - it is usually off because it was
+   wrong, and that is exactly the state someone comes here to inspect. So it
+   fades rather than hides, and the toggle stays at full strength. */
+.rule-row-off .rule-main,
+.rule-row-off .badge {
+  opacity: 0.45;
+}
+
+.rule-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.rule-conditions {
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.rule-cond + .rule-cond {
+  margin-left: 2px;
+}
+
+.rule-field {
+  color: var(--muted);
+}
+
+.rule-verb,
+.rule-or,
+.rule-joiner {
+  margin: 0 4px;
+  font-size: 11.5px;
+  color: var(--faint);
+}
+
+/* The only coloured thing in a row, because it is the only part the user
+   matches against the invoice by eye. */
+.rule-keyword {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.rule-joiner {
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.rule-broken {
+  color: var(--danger);
+  font-size: 12.5px;
+}
+
+.rule-name {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.rule-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+/* --- Editor: priority ----------------------------------------------------- */
+
+.rule-priority-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.rule-priority-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Out-specifies `.row-stacked .row-control .input { flex: 1 }` from
+   primitives.css - a stacked row stretches its control, which is right for a
+   name field and wrong for a three-digit number. */
+.row-stacked .row-control .rule-priority-input .input {
+  width: 88px;
+  flex: 0 0 auto;
+}
+
+.rule-band-note {
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.rule-band-warn {
+  color: var(--warn);
+}
+
+/* The bands as buttons, not as a legend: reading "150 = 税收分类简称" and then
+   typing 150 by hand is two steps where one will do, and a click is also the
+   clearest possible statement that these are the numbers worth using. */
+.rule-bands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.rule-band {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.rule-band:hover {
+  background: var(--hover);
+}
+
+.rule-band-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.rule-band-value {
+  font-size: 11.5px;
+  font-weight: 650;
+  color: var(--text);
+}
+
+/* --- Editor: conditions --------------------------------------------------- */
+
+.cond {
+  padding: 11px 0;
+}
+
+.cond-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* 当 / 并且 - the AND is spelled out on every condition after the first, so
+   the semantics are visible while editing and not only in the hint above. */
+.cond-index {
+  min-width: 26px;
+  font-size: 11.5px;
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.cond-verb {
+  font-size: 11.5px;
+  color: var(--faint);
+}
+
+.cond-spacer {
+  flex: 1;
+}
+
+.cond-hint {
+  margin: 5px 0 7px 33px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.cond-add {
+  padding: 10px 0;
+}
+
+/* --- Editor: keyword chips ------------------------------------------------ */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-left: 33px;
+  padding: 5px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.chips:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 4px 2px 7px;
+  border-radius: 5px;
+  background: var(--code-bg);
+  font-size: 12px;
+}
+
+.chip-remove {
+  display: flex;
+  padding: 1px;
+  border: none;
+  border-radius: 3px;
+  background: none;
+  color: var(--faint);
+}
+
+.chip-remove:hover {
+  background: var(--hover);
+  color: var(--danger);
+}
+
+.chip-input {
+  flex: 1;
+  min-width: 140px;
+  height: 20px;
+  border: none;
+  background: none;
+  font-size: 12.5px;
+}
+
+.chip-input:focus {
+  outline: none;
+}
+
+/* --- Editor: preview and footer ------------------------------------------- */
+
+.rule-preview {
+  margin: 18px 0 0;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+.rule-preview-label {
+  margin-right: 8px;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+/* Pushed to the left of the modal's buttons - it explains why the primary one
+   is disabled, so it has to be next to it. */
+.rule-problem {
+  margin-right: auto;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--danger);
+}
+
+/* --- Category combobox ---------------------------------------------------- */
+
+.combo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 220px;
+}
+
+.combo-input {
+  width: 100%;
+}
+
+.combo-new {
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.combo-menu {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.combo-item {
+  display: block;
+  width: 100%;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  color: var(--text);
+  text-align: left;
+  font-size: 12.5px;
+}
+
+.combo-item:hover {
+  background: var(--hover);
+}
+
+.combo-item-active {
+  background: var(--active);
+}

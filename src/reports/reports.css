@@ -1,0 +1,701 @@
+/* ===========================================================================
+   报销单
+   ---------------------------------------------------------------------------
+   Every colour, radius and font here comes from App.css. Nothing in this file
+   introduces a token, and the three semantic colours keep the meaning they
+   have everywhere else in the app: --danger for 疑似重复 and errors, --warn
+   for things that need a person's eye, --accent for the one action a section
+   exists for.
+
+   The pane is denser than the settings surfaces and quieter than the invoice
+   table: the picker is a working area (two lists, scanned quickly, clicked a
+   lot) and the preview underneath it is a document (read once, carefully,
+   before a file leaves the machine). The layout follows that split - the
+   picker is panelled and busy, the preview is flat and typographic.
+   =========================================================================== */
+
+.rp {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* --- The saved sheets ----------------------------------------------------- */
+
+.rp-sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 45%, var(--bg));
+}
+
+.rp-sidebar-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rp-sidebar-title {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.rp-sidebar-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.rp-sidebar-empty {
+  margin: 12px 8px;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.rp-report {
+  display: flex;
+  align-items: stretch;
+  border-radius: 7px;
+}
+
+.rp-report:hover {
+  background: var(--hover);
+}
+
+.rp-report-active,
+.rp-report-active:hover {
+  background: var(--active);
+}
+
+.rp-report-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 8px;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+.rp-report-title {
+  font-size: 12.5px;
+  font-weight: 550;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rp-report-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.rp-report-amount {
+  color: var(--text);
+}
+
+.rp-report-created {
+  font-size: 10.5px;
+  color: var(--faint);
+}
+
+/* Delete stays out of the way until the row is pointed at: it is one click
+   from destroying a month's assembly work, and a permanently visible bin
+   beside every row also makes the list read as a list of buttons. */
+.rp-report-delete {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border: none;
+  border-radius: 7px;
+  background: none;
+  color: var(--faint);
+  opacity: 0;
+}
+
+.rp-report:hover .rp-report-delete {
+  opacity: 1;
+}
+
+.rp-report-delete:hover {
+  color: var(--danger);
+}
+
+.rp-confirm {
+  margin: 0;
+  font-size: 13px;
+}
+
+.rp-confirm-hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* --- The builder ---------------------------------------------------------- */
+
+.rp-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rp-builder {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rp-builder-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 18px 28px;
+}
+
+.rp-section {
+  margin-top: 22px;
+}
+
+.rp-section-title {
+  margin: 0 0 7px;
+  padding-left: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+}
+
+/* A date field borrowing `.input`; the native control needs a little more
+   room than a text box of the same character count. */
+.rp-date {
+  width: 132px;
+}
+
+/* --- The picker ----------------------------------------------------------- */
+
+.rp-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+/* Below roughly a 13" window the two lists stop being scannable side by side
+   and stack instead - a squeezed 销售方 column is worse than scrolling. */
+@media (max-width: 1080px) {
+  .rp-picker {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rp-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.rp-panel-head,
+.rp-panel-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: color-mix(in srgb, var(--surface) 70%, var(--bg));
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.rp-panel-head {
+  border-bottom: 1px solid var(--border-soft);
+  min-height: 38px;
+}
+
+.rp-panel-foot {
+  border-top: 1px solid var(--border-soft);
+  min-height: 38px;
+}
+
+.rp-panel-foot-total strong {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text);
+}
+
+.rp-panel-spacer {
+  flex: 1;
+}
+
+.rp-panel-count {
+  color: var(--faint);
+}
+
+.rp-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.rp-filter-dates {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rp-filter-dash {
+  color: var(--faint);
+}
+
+/* Tall enough to make a month's worth of invoices worth scrolling, short
+   enough that the preview below stays reachable without a long scroll. */
+.rp-list {
+  max-height: 330px;
+  min-height: 120px;
+  overflow-y: auto;
+}
+
+.rp-list-empty {
+  margin: 0;
+  padding: 18px 12px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--faint);
+  text-align: center;
+}
+
+.rp-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 12.5px;
+}
+
+.rp-row:last-child {
+  border-bottom: none;
+}
+
+.rp-row-candidate {
+  cursor: pointer;
+}
+
+.rp-row-candidate:hover {
+  background: var(--hover);
+}
+
+.rp-row-checked {
+  background: var(--accent-soft);
+}
+
+.rp-row-checked:hover {
+  background: var(--accent-soft);
+}
+
+.rp-check {
+  margin: 3px 0 0;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.rp-index {
+  width: 20px;
+  flex-shrink: 0;
+  padding-top: 1px;
+  color: var(--faint);
+  text-align: right;
+}
+
+.rp-row-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rp-row-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rp-row-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rp-row-amount {
+  flex-shrink: 0;
+  font-weight: 550;
+}
+
+.rp-row-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.rp-row-number {
+  font-size: 10.5px;
+}
+
+.rp-row-category {
+  color: var(--muted);
+}
+
+.rp-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+.rp-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  color: var(--faint);
+}
+
+.rp-icon-btn:hover:not(:disabled) {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.rp-icon-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.rp-icon-btn-danger:hover:not(:disabled) {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* The icon set has one chevron, pointing right; up and down are the same
+   glyph turned, which keeps stroke weight identical across the three
+   buttons in a row. */
+.rp-chevron-up {
+  transform: rotate(-90deg);
+}
+
+.rp-chevron-down {
+  transform: rotate(90deg);
+}
+
+/* --- The preview ---------------------------------------------------------- */
+
+.rp-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--border-soft);
+  overflow: hidden;
+}
+
+.rp-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 12px;
+  background: var(--bg);
+}
+
+.rp-figure-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.rp-figure-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rp-figure-strong {
+  background: color-mix(in srgb, var(--surface) 70%, var(--bg));
+}
+
+.rp-figure-strong .rp-figure-value {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+/* 合计大写 is checked by eye against the figures above it, so it gets a line
+   of its own and letter-spacing wide enough to read one character at a time.
+   Chinese numerals set tight are exactly where 陆 and 陸 get mis-read. */
+.rp-capital {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 70%, var(--bg));
+}
+
+.rp-capital-label {
+  flex-shrink: 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.rp-capital-value {
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+}
+
+.rp-table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.rp-table th {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--muted);
+  text-align: left;
+}
+
+.rp-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.rp-num {
+  text-align: right;
+}
+
+.rp-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rp-share-track {
+  width: 54px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--code-bg);
+  overflow: hidden;
+}
+
+.rp-share-fill {
+  display: block;
+  height: 100%;
+  background: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+/* --- Alerts --------------------------------------------------------------- */
+
+.rp-alert {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+.rp-alert-flush {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.rp-alert-danger {
+  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.rp-alert-warn {
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.rp-alert-title {
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.rp-alert-body {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.rp-alert-list {
+  margin: 7px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.rp-alert-number {
+  margin-right: 8px;
+  opacity: 0.8;
+}
+
+.rp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+/* Tinted from the alert's own colour rather than a token of its own, so a
+   chip belongs to whichever block it sits in. */
+.rp-chip {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  font-size: 11px;
+}
+
+/* --- Export --------------------------------------------------------------- */
+
+.rp-export {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.rp-export-hint {
+  flex: 1;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* --- Export dialog -------------------------------------------------------- */
+
+.rp-result {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--ok) 40%, transparent);
+  border-radius: 10px;
+  background: var(--ok-bg);
+}
+
+.rp-result-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rp-result-title {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ok);
+}
+
+.rp-result-path {
+  margin: 6px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.rp-result-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.rp-details {
+  margin-top: 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rp-details-summary {
+  padding: 9px 12px;
+  background: color-mix(in srgb, var(--surface) 70%, var(--bg));
+  font-size: 12.5px;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.rp-details-body {
+  padding: 4px 14px 16px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.rp-details-body strong {
+  color: var(--text);
+}
+
+.rp-details-note {
+  color: var(--faint);
+}
+
+.rp-ph-table {
+  margin-top: 12px;
+}
+
+.rp-ph-caption {
+  padding-top: 10px;
+  color: var(--text);
+  border-bottom: none;
+}
+
+.rp-ph-token {
+  width: 42%;
+  color: var(--accent);
+  white-space: nowrap;
+}

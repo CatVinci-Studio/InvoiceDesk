@@ -1,0 +1,324 @@
+/* ===========================================================================
+   Import overlay
+   ---------------------------------------------------------------------------
+   Only tokens from App.css - no colour is spelled out here except the black
+   of a backdrop scrim, which is a shadow rather than a colour and has to work
+   over both palettes.
+
+   Two z-index bands: the panels sit at 200 (above the panes, below the toast
+   stack at 300 so an error is still readable over them), and the drop hint at
+   250 so it covers a summary that happens to be open when the next folder
+   arrives.
+   =========================================================================== */
+
+/* --- Drop hint ------------------------------------------------------------ */
+
+.ingest-drop {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  padding: 18px;
+  /* The OS owns this drag. Taking the pointer here could only lose the drop. */
+  pointer-events: none;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+}
+
+.ingest-drop-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  height: 100%;
+  border: 2px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent-soft) 45%, transparent);
+}
+
+.ingest-drop-icon {
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+}
+
+.ingest-drop-title {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--text);
+}
+
+.ingest-drop-formats {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* --- Progress panel ------------------------------------------------------- */
+
+.ingest-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.ingest-panel {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+}
+
+.ingest-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ingest-panel-title {
+  font-size: 13.5px;
+  font-weight: 650;
+}
+
+.ingest-panel-count {
+  color: var(--muted);
+}
+
+.ingest-bar {
+  height: 4px;
+  margin: 10px 0 8px;
+  border-radius: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.ingest-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  /* Linear, and short: a spring here reads as the import stalling. */
+  transition: width 0.12s linear;
+}
+
+.ingest-current {
+  overflow: hidden;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Tally ---------------------------------------------------------------- */
+/* The one thing on screen worth looking at, in both the progress panel and
+   the summary - so it is the same component and the same four columns in
+   both, and the numbers do not move between the two states. */
+
+.ingest-tally {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin-top: 12px;
+  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--border) 55%, transparent);
+  overflow: hidden;
+}
+
+.ingest-tally-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 8px 4px;
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+
+.ingest-tally-count {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.ingest-tally-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Colour carries the meaning here rather than position, because the four
+   numbers are read at a glance and in any order. */
+.ingest-tally-count.ingest-tone-ok {
+  color: var(--ok);
+}
+
+.ingest-tally-count.ingest-tone-warn {
+  color: var(--warn);
+}
+
+/* 重复 stays grey on purpose - see the note in ImportOverlay.tsx. */
+.ingest-tally-count.ingest-tone-muted {
+  color: var(--muted);
+}
+
+.ingest-tally-count.ingest-tone-danger {
+  color: var(--danger);
+}
+
+/* --- Summary -------------------------------------------------------------- */
+
+.ingest-summary-note {
+  margin: 12px 2px 0;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.ingest-note {
+  display: flex;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent-soft) 45%, var(--bg));
+}
+
+.ingest-note-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.ingest-note-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ingest-note-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+/* --- Problem list --------------------------------------------------------- */
+
+.ingest-problems {
+  margin-top: 16px;
+}
+
+.ingest-problems-title {
+  margin-bottom: 5px;
+  padding-left: 4px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.ingest-problem {
+  padding: 7px 4px;
+}
+
+.ingest-problem + .ingest-problem {
+  border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+.ingest-problem-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+.ingest-problem-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ingest-chevron {
+  flex-shrink: 0;
+  color: var(--faint);
+  transition: transform 0.12s ease;
+}
+
+.ingest-chevron-open {
+  transform: rotate(90deg);
+}
+
+.ingest-problem-message {
+  margin: 3px 0 0 17px;
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* --- 识别过程 ------------------------------------------------------------- */
+/* Indented under the file it belongs to and ruled on the left, so a long
+   trace stays visibly subordinate to its row rather than becoming a second
+   list competing with it. */
+
+.ingest-trace {
+  margin: 6px 0 2px 17px;
+  padding: 4px 0 4px 10px;
+  border-left: 1px solid var(--border);
+  list-style: none;
+}
+
+.ingest-step {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 2px 0;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.ingest-step-mark {
+  flex-shrink: 0;
+  width: 13px;
+  color: var(--faint);
+}
+
+.ingest-step-hit .ingest-step-mark {
+  color: var(--ok);
+}
+
+.ingest-step-layer {
+  flex-shrink: 0;
+  min-width: 6.5em;
+  color: var(--text);
+}
+
+/* The layer that did NOT fire is the interesting one when nothing worked, so
+   misses are not dimmed further - only the detail is. */
+.ingest-step-detail {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.ingest-trace-empty {
+  margin: 6px 0 2px 17px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--faint);
+}

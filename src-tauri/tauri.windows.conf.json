@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "app": {
+    "windows": [
+      {
+        "title": "智税",
+        "width": 1180,
+        "height": 760,
+        "minWidth": 900,
+        "minHeight": 560,
+        "decorations": false,
+        "dragDropEnabled": true
+      }
+    ]
+  },
+  "bundle": {
+    "targets": ["nsis"],
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "installMode": "currentUser",
+        "languages": ["SimpChinese", "English"],
+        "compression": "lzma"
+      }
+    }
+  }
+}

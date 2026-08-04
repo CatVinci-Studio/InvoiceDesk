@@ -1,0 +1,156 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS ships TWO native builds rather than one universal binary.
+          #
+          # Both routes work as far as the updater is concerned, so the choice
+          # is on cost. tauri-plugin-updater only ever looks up `{os}-{arch}`
+          # (and `{os}-{arch}-{installer}`) in latest.json - there is no
+          # `darwin-universal` key it falls back to - and tauri-action papers
+          # over that by writing a universal build's URL into BOTH the
+          # darwin-aarch64 and darwin-x86_64 entries. So a universal build
+          # updates Intel Macs fine; it just hands every Apple Silicon user an
+          # x86_64 slice they will never execute, roughly doubling the download
+          # for everyone. It also compiles the whole tree twice inside one job
+          # (rusqlite's bundled SQLite included), so it is serial where two
+          # matrix entries are parallel.
+          #
+          # The usual objection to splitting - two jobs writing one release -
+          # does not apply. tauri-action renames the macOS updater bundle to
+          # `ZhiShui_<version>_<arch>.app.tar.gz`, so aarch64 and x64 never
+          # collide on an asset name, and latest.json is merged rather than
+          # replaced: each job re-downloads the copy already on the release and
+          # adds its own platform key. That is the same mechanism the three
+          # platforms in Levis's matrix already rely on.
+          #
+          # The cost is real but small: two notarization submissions per
+          # release instead of one.
+          #
+          # Intel is here because the audience is finance staff, who run older
+          # hardware for longer than developers do.
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            args: --target aarch64-apple-darwin
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+            args: --target x86_64-apple-darwin
+
+          # Windows ships the NSIS .exe and nothing else; the target list
+          # itself lives in src-tauri/tauri.windows.conf.json, so a local
+          # `tauri build` produces the same one artifact this does.
+          #
+          # It used to bundle MSI as well on stable tags, and that is what
+          # made Windows upgrades ask to uninstall first: the two installers
+          # register in different places, so neither recognises the other's
+          # copy - take the .msi once and the next .exe cannot replace it.
+          # MSI also cannot build a pre-release at all ("optional pre-release
+          # identifier in app version must be numeric-only ... for msi
+          # target"), so rc tags were NSIS-only regardless, and the updater
+          # has always shipped NSIS. One installer, one upgrade path.
+          - platform: windows-latest
+            target: ""
+            args: ""
+
+          # No Linux. ZhiShui targets Windows and macOS only, so there is no
+          # ubuntu entry and no webkit2gtk/libappindicator apt step anywhere
+          # in this file. Adding Linux back means restoring both.
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Empty on Windows, where the host triple is already the build
+          # target and rustup needs nothing extra installed.
+          targets: ${{ matrix.target }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+          # Without this the two macOS entries share a cache key - same runner
+          # OS, same job, same Cargo.lock - and would keep restoring each
+          # other's target dir, so every run starts by rebuilding the arch it
+          # is not. Worth avoiding here in particular: rusqlite `bundled`
+          # recompiles the SQLite amalgamation from C for each architecture.
+          key: ${{ matrix.target }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build and release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Signs the updater artifacts (latest.json + .sig files) so
+          # installed apps can verify downloads against the pubkey baked
+          # into tauri.conf.json. Not optional here: bundle
+          # `createUpdaterArtifacts` is true, so a missing key fails the
+          # build rather than quietly publishing an un-updatable release.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          #
+          # NO macOS code signing or notarization. Unlike Levis, which carries
+          # an Apple Developer identity and notarizes every build, ZhiShui
+          # ships a plain unsigned .dmg - which is a deliberate choice, not an
+          # omission, and it has exactly one visible consequence:
+          #
+          #   Gatekeeper refuses the first launch with "无法打开，因为无法验证
+          #   开发者". The way past it is 右键点应用 → 打开 → 在弹窗里再点
+          #   「打开」, once, ever.
+          #
+          # That instruction has to be in the README and the manual, because a
+          # user who does not know it concludes the download is broken. If an
+          # Apple identity is added later, the six APPLE_* secrets go back
+          # here and the note comes out of the docs - see docs/RELEASE.md.
+          #
+          # Windows is unaffected: it was never signed either, and SmartScreen
+          # shows its own "更多信息 → 仍要运行" prompt for the same reason.
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "ZhiShui ${{ github.ref_name }}"
+          # Publish immediately on tag - a draft release's latest.json is
+          # invisible to the in-app updater, so drafts left unpublished
+          # silently stall every user on the previous version.
+          releaseDraft: false
+          # A semver pre-release suffix (v0.9.0-rc.1, -beta.2, -alpha) marks
+          # the GitHub release as a pre-release. That is what keeps it away
+          # from everyone else: the updater endpoint in tauri.conf.json points
+          # at `releases/latest/...`, and GitHub's "latest" excludes
+          # pre-releases - so a stable install never even sees this build's
+          # latest.json. Without this the tag pattern below (v*.*.*) matches
+          # an rc tag too and would ship it to every user as the new stable.
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          args: ${{ matrix.args }}
+
+  # A Homebrew cask job would go here, as a second job with
+  # `needs: release` and `if: !contains(github.ref_name, '-')` - a cask has no
+  # channel of its own, so pointing it at an rc would hand that build to every
+  # `brew upgrade`, the same mistake `prerelease:` above exists to prevent. It
+  # would rewrite version + sha256 in Casks/zhishui.rb against
+  # ZhiShui_<version>_aarch64.dmg and push over a deploy key, since
+  # GITHUB_TOKEN cannot write to another repository.
+  #
+  # Omitted because CatVinci-Studio has no tap for ZhiShui yet. See Levis's
+  # release.yml for a working copy of the job.

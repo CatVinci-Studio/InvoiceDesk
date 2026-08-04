@@ -1,0 +1,385 @@
+/* ===========================================================================
+   ZhiShui 的设计系统
+   ---------------------------------------------------------------------------
+   Palette, typography and shell, carried over from Levis (CatVinci's editor)
+   so the two apps read as siblings: the same warm paper background, the same
+   muted borders, the same blue accent.
+
+   What is different here is DENSITY. Levis is a writing surface with one
+   thing on screen; ZhiShui is a ledger with two hundred rows, and the visual
+   job is the opposite - a row must be scannable at a glance and disappear
+   when it is unremarkable. So: smaller type, tighter rows, tabular figures
+   for every amount, and colour reserved almost entirely for the two things
+   that need a human (待复核 and 疑似重复).
+   =========================================================================== */
+
+:root {
+  --font-sans:
+    -apple-system, "SF Pro Text", "PingFang SC", "Noto Sans SC", Inter,
+    system-ui, sans-serif;
+  /* Amounts and invoice numbers only. Tabular figures so digits line up
+     column-wise - a 20-digit 发票号码 in a proportional font is unreadable
+     and uncomparable against the row above it. */
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, "DejaVu Sans Mono",
+    monospace;
+
+  --bg: #fbfaf8;
+  --text: #2b2b2b;
+  --muted: #7a7a7a;
+  --faint: #a3a09a;
+  --accent: #3a6bd6;
+  --accent-soft: #e3e0f5;
+  --border: #e4e1db;
+  --border-soft: #eeebe5;
+  --surface: #f4f2ee;
+  --hover: #e9e6df;
+  --active: #e3e0f5;
+  --code-bg: #f1efe9;
+
+  /* The only three semantic colours in the app, and each earns its place:
+     danger  = 金额对不上 / 日期非法, a real defect
+     warn    = 待复核 / 疑似重复, needs a person
+     ok      = 已确认, deliberately quiet - most rows are fine and should
+               not be a wall of green */
+  --danger: #c1495a;
+  --danger-bg: #fbeef0;
+  --warn: #a1651b;
+  --warn-bg: #fbf3e3;
+  --ok: #3f7d55;
+  --ok-bg: #eef5f0;
+
+  color: var(--text);
+  background-color: var(--bg);
+  font-family: var(--font-sans);
+  font-synthesis: style;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1e1e1e;
+    --text: #d8d6d0;
+    --muted: #8c8c8c;
+    --faint: #6b6b68;
+    --accent: #6c9bf7;
+    --accent-soft: #2e2c3d;
+    --border: #333230;
+    --border-soft: #2a2927;
+    --surface: #191919;
+    --hover: #272725;
+    --active: #2e2c3d;
+    --code-bg: #2a2a28;
+
+    --danger: #e2798a;
+    --danger-bg: #3a2429;
+    --warn: #d9a95c;
+    --warn-bg: #362d1c;
+    --ok: #7ab890;
+    --ok-bg: #22302a;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1e1e1e;
+  --text: #d8d6d0;
+  --muted: #8c8c8c;
+  --faint: #6b6b68;
+  --accent: #6c9bf7;
+  --accent-soft: #2e2c3d;
+  --border: #333230;
+  --border-soft: #2a2927;
+  --surface: #191919;
+  --hover: #272725;
+  --active: #2e2c3d;
+  --code-bg: #2a2a28;
+
+  --danger: #e2798a;
+  --danger-bg: #3a2429;
+  --warn: #d9a95c;
+  --warn-bg: #362d1c;
+  --ok: #7ab890;
+  --ok-bg: #22302a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  font-size: 13px;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Amounts, invoice numbers, tax IDs. */
+.tnum {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+}
+
+/* ---------------------------------------------------------------------------
+   Window frame
+   The 28px strip at the top that the app draws itself - overlaid on macOS
+   (the traffic lights float in it), fully app-drawn on Windows. See
+   ui/window-chrome.ts.
+   --------------------------------------------------------------------------- */
+
+.window-bar {
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  /* The whole strip drags the window; individual controls take their clicks
+     back with `pointer-events: auto`. */
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+/* Room for the macOS traffic lights, which float over our row. */
+:root[data-window-chrome="native"] .window-bar {
+  padding-left: 78px;
+}
+
+.window-bar-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.window-bar-spacer {
+  flex: 1;
+}
+
+/* A quiet readout of what is currently on screen, in the title row where it
+   is always visible without costing a line of the table. */
+.window-bar-stat {
+  font-size: 11.5px;
+  color: var(--muted);
+  -webkit-app-region: no-drag;
+}
+
+.window-bar-stat strong {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------------------------
+   Shell
+   --------------------------------------------------------------------------- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 8px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.sidebar-group-title {
+  margin: 14px 0 4px;
+  padding: 0 8px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+}
+
+.sidebar-group-title:first-child {
+  margin-top: 2px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  text-align: left;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.sidebar-item:hover {
+  background: var(--hover);
+}
+
+.sidebar-item-active {
+  background: var(--active);
+  color: var(--text);
+  font-weight: 550;
+}
+
+.sidebar-item svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.sidebar-item-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The count beside a sidebar entry. Muted by default; the two entries that
+   mean "someone has to look at this" get colour instead. */
+.sidebar-count {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.sidebar-count-warn {
+  color: var(--warn);
+  font-weight: 650;
+}
+
+.sidebar-count-danger {
+  color: var(--danger);
+  font-weight: 650;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Toolbar
+   --------------------------------------------------------------------------- */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Status bar
+   The running total of whatever the filter currently selects. Sits at the
+   bottom because that is where a spreadsheet puts it, and this is a
+   spreadsheet's job.
+   --------------------------------------------------------------------------- */
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 7px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 11.5px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.statusbar strong {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--text);
+}
+
+.statusbar-spacer {
+  flex: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Empty states
+   --------------------------------------------------------------------------- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  padding: 40px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.empty-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.empty-hint {
+  font-size: 12.5px;
+  max-width: 42ch;
+  line-height: 1.7;
+}

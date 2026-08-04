@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4d7fe3"/>
+      <stop offset="1" stop-color="#2f5bc4"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f4f2ee"/>
+    </linearGradient>
+    <filter id="drop" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="26" flood-color="#132a5c" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- App plate: macOS squircle-ish rounded square. -->
+  <rect x="72" y="72" width="880" height="880" rx="200" fill="url(#plate)"/>
+
+  <!-- The receipt: a slip of paper with the torn bottom edge every printed
+       invoice has. Tilted a few degrees so the icon reads as a physical
+       object rather than a form field. -->
+  <g filter="url(#drop)" transform="rotate(-4 512 512)">
+    <path fill="url(#paper)" d="
+      M 300 236
+      h 424
+      a 26 26 0 0 1 26 26
+      v 470
+      l -56 34 -56 -34 -56 34 -56 -34 -56 34 -56 -34 -56 34 -56 -34
+      V 262
+      a 26 26 0 0 1 26 -26 z"/>
+
+    <!-- Ruled lines: the invoice's field rows. -->
+    <rect x="360" y="336" width="304" height="30" rx="15" fill="#d9d5cd"/>
+    <rect x="360" y="416" width="216" height="26" rx="13" fill="#e2ded6"/>
+    <rect x="360" y="482" width="252" height="26" rx="13" fill="#e2ded6"/>
+
+    <!-- The total: what the whole app exists to add up. -->
+    <text x="360" y="620" font-family="-apple-system, 'SF Pro Text', 'PingFang SC', Helvetica, sans-serif"
+          font-size="132" font-weight="700" fill="#2f5bc4">¥</text>
+    <rect x="470" y="566" width="194" height="42" rx="21" fill="#2f5bc4" opacity="0.9"/>
+  </g>
+</svg>

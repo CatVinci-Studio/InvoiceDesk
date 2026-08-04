@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    // ES2022 rather than Levis's ES2020: the only consumer is a bundled
+    // WebView (WebKit on macOS, Chromium-based WebView2 on Windows), both far
+    // newer than this, and ES2021 is where `String.replaceAll` and
+    // `Object.hasOwn` live. `ES2022.Intl` was already being pulled in on its
+    // own for `Intl.Segmenter`-era APIs, which made the ES2020 baseline
+    // inconsistent anyway.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "types": ["vitest/globals"]
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
