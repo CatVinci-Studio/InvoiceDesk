@@ -23,7 +23,7 @@
 export const APP_NAME = "智票";
 /** The romanisation, for filenames and the repository. */
 export const APP_NAME_LATIN = "Invoice Desk";
-export const APP_VERSION = "0.0.3";
+export const APP_VERSION = "0.0.4";
 export const APP_VENDOR = "CatVinci Studio";
 
 /** The ledger. Named here so the 「关于」 section can point a user at the one
