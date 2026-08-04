@@ -502,7 +502,7 @@ pub fn totals_by_category(
         }
     }
 
-    totals.sort_by(|a, b| b.total_cents.cmp(&a.total_cents));
+    totals.sort_by_key(|line| std::cmp::Reverse(line.total_cents));
     Ok(totals)
 }
 
