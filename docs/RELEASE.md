@@ -42,7 +42,7 @@
 ### 产物清单
 
 > `productName` 是「Invoice Desk」，带一个空格。GitHub 上传发布资源时会把
-> 文件名里的空格替换成点，所以下载下来的是 `Invoice.Desk_0.0.2_aarch64.dmg`
+> 文件名里的空格替换成点，所以下载下来的是 `Invoice.Desk_0.0.3_aarch64.dmg`
 > 而不是带空格的名字。dmg 里面的 `.app` 仍然叫「Invoice Desk.app」，Finder
 > 和菜单栏显示的也是带空格的两个词。写文档时按**带点**的名字写。
 

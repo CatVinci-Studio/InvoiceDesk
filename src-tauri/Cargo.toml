@@ -1,6 +1,6 @@
 [package]
 name = "invoice-desk"
-version = "0.0.2"
+version = "0.0.3"
 description = "智票 (InvoiceDesk) - 发票扫描、分类统计与报销表生成"
 authors = ["CatVinci Studio"]
 edition = "2021"

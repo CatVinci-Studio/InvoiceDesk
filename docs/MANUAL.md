@@ -1,6 +1,6 @@
 # 智票使用说明书
 
-**版本 0.0.2** · CatVinci Studio
+**版本 0.0.3** · CatVinci Studio
 
 ---
 
@@ -72,9 +72,9 @@ Windows 需要 WebView2 运行时。绝大多数 Windows 10/11 已预装；如�
 
 | 平台                               | 文件名                             |
 | ---------------------------------- | ---------------------------------- |
-| macOS（Apple Silicon，M 系列芯片） | `Invoice.Desk_0.0.2_aarch64.dmg`   |
-| macOS（Intel 芯片）                | `Invoice.Desk_0.0.2_x64.dmg`       |
-| Windows                            | `Invoice.Desk_0.0.2_x64-setup.exe` |
+| macOS（Apple Silicon，M 系列芯片） | `Invoice.Desk_0.0.3_aarch64.dmg`   |
+| macOS（Intel 芯片）                | `Invoice.Desk_0.0.3_x64.dmg`       |
+| Windows                            | `Invoice.Desk_0.0.3_x64-setup.exe` |
 
 > 文件名里的点不是笔误——GitHub 会把发布文件名中的空格替换成点。
 
