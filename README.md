@@ -85,6 +85,10 @@ Download from [Releases](https://github.com/CatVinci-Studio/InvoiceDesk/releases
 > Nothing is wrong with the download; this is what both systems do with
 > unsigned applications.
 
+After that first launch you will not need this page again: the app checks for
+updates itself and offers them in a strip along the bottom of the window.
+**Nothing installs without you pressing the button.**
+
 ## Getting started
 
 1. Drop this month's invoice files — or the whole folder — onto the window.
