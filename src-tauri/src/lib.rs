@@ -1,4 +1,4 @@
-//! ZhiShui - 发票扫描、分类统计与报销表生成。
+//! InvoiceDesk - 发票扫描、分类统计与报销表生成。
 //!
 //! The crate is split so the parts that handle money are pure functions over
 //! bytes, and everything touching the network, the disk or the window lives
@@ -33,7 +33,7 @@ fn database_path(app: &tauri::AppHandle) -> Result<std::path::PathBuf, String> {
         .path()
         .app_data_dir()
         .map_err(|e| format!("找不到数据目录：{e}"))?;
-    Ok(dir.join("zhishui.db"))
+    Ok(dir.join("invoicedesk.db"))
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -106,5 +106,5 @@ pub fn run() {
             auth::custom_endpoint::test_custom_endpoint,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running ZhiShui");
+        .expect("error while running InvoiceDesk");
 }

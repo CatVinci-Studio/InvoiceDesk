@@ -8,7 +8,7 @@
  *
  * ## What this pane is actually for
  *
- * Nothing else in ZhiShui touches the network. Import reads QR codes, PDF
+ * Nothing else in InvoiceDesk touches the network. Import reads QR codes, PDF
  * text layers and OFD/XML attachments locally; classification runs the user's
  * own rules; the report writer fills a local .xlsx. The two switches in
  * 「发送到 AI 的内容」 are the entire boundary between "this program is
@@ -254,7 +254,7 @@ function AiSection() {
     <>
       <Group
         title="发送到 AI 的内容"
-        hint="两个开关默认都是关闭的。全部关闭时，智税只用二维码、PDF 文本层和本机规则处理发票，不联网。"
+        hint="两个开关默认都是关闭的。全部关闭时，智票只用二维码、PDF 文本层和本机规则处理发票，不联网。"
       >
         <Row
           label="用 AI 识别拍照/扫描的发票"
@@ -284,7 +284,7 @@ function AiSection() {
 
       <Group
         title="服务商"
-        hint="API Key 保存在配置目录下一个权限 0600 的单独文件里，不写进发票账本 zhishui.db —— 把账本复制走或者交给同事时，不会把钥匙一起带上。"
+        hint="API Key 保存在配置目录下一个权限 0600 的单独文件里，不写进发票账本 invoicedesk.db —— 把账本复制走或者交给同事时，不会把钥匙一起带上。"
       >
         <Row
           label="服务商"
@@ -597,13 +597,13 @@ function AboutSection() {
             sentence - which in a paragraph with no word spaces shows up as a
             gap in the middle of a clause. */}
         <p className="settings-about">
-          {"智税批量识别增值税电子发票（PDF / OFD）与纸质发票照片，" +
+          {"智票批量识别增值税电子发票（PDF / OFD）与纸质发票照片，" +
             "自动分类、查重，并导出报销明细表。"}
         </p>
         <p className="settings-about">
           {"所有发票、识别结果和分类规则都保存在这台电脑上，不经过任何服务器。" +
             "只有在你打开上面「AI 识别」里的开关之后，对应的内容才会发送到你自己配置的服务商；" +
-            "两个开关都关闭时，除了检查更新，智税不会向外发起任何网络请求。"}
+            "两个开关都关闭时，除了检查更新，智票不会向外发起任何网络请求。"}
         </p>
       </Group>
 

@@ -1,12 +1,12 @@
 /* ===========================================================================
-   ZhiShui 的设计系统
+   InvoiceDesk 的设计系统
    ---------------------------------------------------------------------------
    Palette, typography and shell, carried over from Levis (CatVinci's editor)
    so the two apps read as siblings: the same warm paper background, the same
    muted borders, the same blue accent.
 
    What is different here is DENSITY. Levis is a writing surface with one
-   thing on screen; ZhiShui is a ledger with two hundred rows, and the visual
+   thing on screen; InvoiceDesk is a ledger with two hundred rows, and the visual
    job is the opposite - a row must be scannable at a glance and disappear
    when it is unremarkable. So: smaller type, tighter rows, tabular figures
    for every amount, and colour reserved almost entirely for the two things

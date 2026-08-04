@@ -6,7 +6,7 @@
 //!
 //! ## Why every entry is a Chinese provider
 //!
-//! ZhiShui reads Chinese invoices, for people in China. That shapes the list
+//! InvoiceDesk reads Chinese invoices, for people in China. That shapes the list
 //! three ways:
 //!
 //! - **Reachability.** OpenAI and Anthropic endpoints do not resolve from a

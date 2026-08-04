@@ -63,7 +63,7 @@ vi.mock("@tauri-apps/plugin-opener", () => ({
 vi.mock("@tauri-apps/api/path", () => ({
   appDataDir: vi.fn(
     async () =>
-      "/Users/someone/Library/Application Support/com.chengaoshen.zhishui",
+      "/Users/someone/Library/Application Support/com.chengaoshen.invoicedesk",
   ),
   join: vi.fn(async (...parts: string[]) => parts.join("/")),
 }));

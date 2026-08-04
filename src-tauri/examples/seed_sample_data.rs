@@ -14,7 +14,7 @@
 //! `classify` → `db::save` - so a run of this is also an end-to-end check that
 //! those four fit together outside the test harness.
 
-use zhishui_lib::{classify, db, extract};
+use invoice_desk_lib::{classify, db, extract};
 
 /// A 数电票 XML, in the shape [`extract::einvoice_xml`] parses.
 fn invoice_xml(
@@ -60,7 +60,7 @@ fn invoice_xml(
 }
 
 fn main() -> Result<(), String> {
-    let dir = std::env::temp_dir().join("zhishui-samples");
+    let dir = std::env::temp_dir().join("invoicedesk-samples");
     std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
 
     // (文件名, 内容) - the trailing comment on each says which UI state it is
@@ -178,7 +178,7 @@ fn main() -> Result<(), String> {
 
     // The same database the app opens. Kept in step with `lib.rs`'s
     // `database_path` by hand - there is no AppHandle out here to ask.
-    let db_path = dirs_app_data()?.join("zhishui.db");
+    let db_path = dirs_app_data()?.join("invoicedesk.db");
     println!("账本：{}", db_path.display());
     let connection = db::open(&db_path)?;
     db::seed_rules_if_empty(&connection)?;
@@ -234,5 +234,5 @@ fn dirs_app_data() -> Result<std::path::PathBuf, String> {
     } else {
         std::path::PathBuf::from(home).join(".local/share")
     };
-    Ok(base.join("com.chengaoshen.zhishui"))
+    Ok(base.join("com.chengaoshen.invoicedesk"))
 }

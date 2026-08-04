@@ -58,7 +58,7 @@ import "./rules.css";
  * and the reason the app needs no filesystem permission of its own.
  */
 const RULES_FILE_FILTER = [{ name: "规则文件", extensions: ["json"] }];
-const DEFAULT_RULES_FILENAME = "zhishui-规则.json";
+const DEFAULT_RULES_FILENAME = "invoicedesk-规则.json";
 
 export function RulesPane({ onChanged }: { onChanged: () => void }) {
   const toast = useToast();

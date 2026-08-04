@@ -1,7 +1,7 @@
 [package]
-name = "zhishui"
-version = "0.0.1"
-description = "智税 (ZhiShui) - 发票扫描、分类统计与报销表生成"
+name = "invoice-desk"
+version = "0.0.2"
+description = "智票 (InvoiceDesk) - 发票扫描、分类统计与报销表生成"
 authors = ["CatVinci Studio"]
 edition = "2021"
 
@@ -13,7 +13,7 @@ resolver = "2"
 # The `_lib` suffix may seem redundant but it is necessary to make the lib
 # name unique and avoid conflicting with the bin name on Windows.
 # See https://github.com/rust-lang/cargo/issues/8519
-name = "zhishui_lib"
+name = "invoice_desk_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

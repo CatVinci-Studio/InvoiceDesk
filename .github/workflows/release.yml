@@ -31,7 +31,7 @@ jobs:
           #
           # The usual objection to splitting - two jobs writing one release -
           # does not apply. tauri-action renames the macOS updater bundle to
-          # `ZhiShui_<version>_<arch>.app.tar.gz`, so aarch64 and x64 never
+          # `Invoice Desk_<version>_<arch>.app.tar.gz`, so aarch64 and x64 never
           # collide on an asset name, and latest.json is merged rather than
           # replaced: each job re-downloads the copy already on the release and
           # adds its own platform key. That is the same mechanism the three
@@ -65,7 +65,7 @@ jobs:
             target: ""
             args: ""
 
-          # No Linux. ZhiShui targets Windows and macOS only, so there is no
+          # No Linux. InvoiceDesk targets Windows and macOS only, so there is no
           # ubuntu entry and no webkit2gtk/libappindicator apt step anywhere
           # in this file. Adding Linux back means restoring both.
 
@@ -112,7 +112,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           #
           # NO macOS code signing or notarization. Unlike Levis, which carries
-          # an Apple Developer identity and notarizes every build, ZhiShui
+          # an Apple Developer identity and notarizes every build, InvoiceDesk
           # ships a plain unsigned .dmg - which is a deliberate choice, not an
           # omission, and it has exactly one visible consequence:
           #
@@ -129,7 +129,7 @@ jobs:
           # shows its own "更多信息 → 仍要运行" prompt for the same reason.
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "ZhiShui ${{ github.ref_name }}"
+          releaseName: "InvoiceDesk ${{ github.ref_name }}"
           # Publish immediately on tag - a draft release's latest.json is
           # invisible to the in-app updater, so drafts left unpublished
           # silently stall every user on the previous version.
@@ -148,9 +148,9 @@ jobs:
   # `needs: release` and `if: !contains(github.ref_name, '-')` - a cask has no
   # channel of its own, so pointing it at an rc would hand that build to every
   # `brew upgrade`, the same mistake `prerelease:` above exists to prevent. It
-  # would rewrite version + sha256 in Casks/zhishui.rb against
-  # ZhiShui_<version>_aarch64.dmg and push over a deploy key, since
+  # would rewrite version + sha256 in Casks/invoice-desk.rb against
+  # Invoice Desk_<version>_aarch64.dmg and push over a deploy key, since
   # GITHUB_TOKEN cannot write to another repository.
   #
-  # Omitted because CatVinci-Studio has no tap for ZhiShui yet. See Levis's
+  # Omitted because CatVinci-Studio has no tap for InvoiceDesk yet. See Levis's
   # release.yml for a working copy of the job.

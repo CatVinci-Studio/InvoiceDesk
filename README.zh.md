@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="src-tauri/icons/128x128@2x.png" alt="智税" width="120" height="120" />
+  <img src="src-tauri/icons/128x128@2x.png" alt="智票" width="120" height="120" />
 </p>
 
-<h1 align="center">智税 ZhiShui</h1>
+<h1 align="center">智票 InvoiceDesk</h1>
 
 <p align="center">
   <strong>把一堆发票变成一张报销表。</strong><br>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/CatVinci-Studio/ZhiShui/releases/latest"><strong>下载</strong></a> ·
+  <a href="https://github.com/CatVinci-Studio/InvoiceDesk/releases/latest"><strong>下载</strong></a> ·
   <a href="./README.md">English</a> ·
   <a href="./docs/MANUAL.md">使用说明书</a>
 </p>
@@ -24,7 +24,7 @@
 
 ## 这是什么
 
-智税是一款本地运行的发票整理工具。把电子发票（PDF / OFD / XML）和纸质发票的照片一起拖进来，它会：
+智票是一款本地运行的发票整理工具。把电子发票（PDF / OFD / XML）和纸质发票的照片一起拖进来，它会：
 
 1. **读出字段** —— 发票号码、开票日期、购销方、金额、税额、价税合计、明细项目
 2. **自动分类** —— 住宿、餐饮、市内交通、办公用品……按规则归类，规则你可以改
@@ -37,7 +37,7 @@
 
 市面上的工具要么是 SaaS（发票是带着税号和金额的财务凭证，不想传到别人服务器上），要么依赖 OCR 把 `8` 认成 `3` 却看起来一切正常。
 
-智税的做法不一样：**能不猜就不猜**。
+智票的做法不一样：**能不猜就不猜**。
 
 ## 识别是分层的
 
@@ -63,24 +63,24 @@ AI 服务商只收录国内厂商：阿里云百炼（通义千问）、智谱 G
 
 ## 安装
 
-从 [Releases](https://github.com/CatVinci-Studio/ZhiShui/releases/latest) 下载：
+从 [Releases](https://github.com/CatVinci-Studio/InvoiceDesk/releases/latest) 下载：
 
 | 平台 | 安装包 |
 | --- | --- |
-| macOS（Apple 芯片） | `ZhiShui_X.Y.Z_aarch64.dmg` |
-| macOS（Intel 芯片） | `ZhiShui_X.Y.Z_x64.dmg` |
-| Windows | `ZhiShui_X.Y.Z_x64-setup.exe` |
+| macOS（Apple 芯片） | `Invoice Desk_X.Y.Z_aarch64.dmg` |
+| macOS（Intel 芯片） | `Invoice Desk_X.Y.Z_x64.dmg` |
+| Windows | `Invoice Desk_X.Y.Z_x64-setup.exe` |
 
 > **第一次打开需要多一步。** 安装包没有做代码签名，所以：
 >
-> - **macOS**：**右键**点智税 →「打开」→ 弹窗里再点一次「打开」。只需要做这一次。
+> - **macOS**：**右键**点智票 →「打开」→ 弹窗里再点一次「打开」。只需要做这一次。
 > - **Windows**：出现「Windows 已保护你的电脑」时，点「更多信息」→「仍要运行」。
 >
 > 这不是安装包有问题，是系统对未签名应用的默认拦截。
 
 ## 快速上手
 
-1. 打开智税，把发票文件或整个文件夹拖进窗口
+1. 打开智票，把发票文件或整个文件夹拖进窗口
 2. 导入完成后看一眼「待复核」和「疑似重复」——需要人看的就这两类
 3. 需要的话在「分类规则」里调整归类规则，然后「重新分类全部发票」
 4. 新建一张报销单，勾上要报的发票，导出 Excel
@@ -90,8 +90,8 @@ AI 服务商只收录国内厂商：阿里云百炼（通义千问）、智谱 G
 ## 从源码构建
 
 ```bash
-git clone https://github.com/CatVinci-Studio/ZhiShui.git
-cd ZhiShui
+git clone https://github.com/CatVinci-Studio/InvoiceDesk.git
+cd InvoiceDesk
 npm install
 
 npm run tauri dev     # 开发模式

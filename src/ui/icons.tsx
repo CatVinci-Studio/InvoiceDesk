@@ -118,7 +118,7 @@ export function WindowCloseIcon({ className }: IconProps) {
 }
 
 // ---------------------------------------------------------------------------
-// ZhiShui's own set
+// InvoiceDesk's own set
 //
 // Same 16-unit grid, same 1.4 stroke, same `currentColor` rule as above. The
 // sidebar and toolbar are 11-13px muted chrome, and an icon that arrives at a

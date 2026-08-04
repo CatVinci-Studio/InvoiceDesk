@@ -828,7 +828,7 @@ export function InvoiceDetail({
             </>
           }
         >
-          只从智税的账本里删除记录，原始文件不会被动。
+          只从智票的账本里删除记录，原始文件不会被动。
         </Modal>
       )}
     </aside>

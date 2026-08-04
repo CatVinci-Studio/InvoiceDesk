@@ -136,13 +136,13 @@ describe("RulesPane", () => {
 
   it("writes the rules to the file the user picked", async () => {
     setup();
-    vi.mocked(save).mockResolvedValue("/tmp/zhishui-规则.json");
+    vi.mocked(save).mockResolvedValue("/tmp/invoicedesk-规则.json");
     vi.mocked(rulesApi.exportToFile).mockResolvedValue(2);
     fireEvent.click(await screen.findByRole("button", { name: "导出规则" }));
 
     await vi.waitFor(() =>
       expect(rulesApi.exportToFile).toHaveBeenCalledWith(
-        "/tmp/zhishui-规则.json",
+        "/tmp/invoicedesk-规则.json",
       ),
     );
     expect(await screen.findByText("已导出 2 条规则")).toBeTruthy();

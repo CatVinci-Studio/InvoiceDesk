@@ -31,7 +31,7 @@ jobs:
   rust:
     # macOS rather than Linux, deliberately. A Tauri build on Ubuntu cannot
     # link until webkit2gtk/libappindicator/librsvg are apt-installed, and
-    # ZhiShui publishes no Linux build at all (see release.yml), so that
+    # InvoiceDesk publishes no Linux build at all (see release.yml), so that
     # install would be several minutes per PR spent proving nothing anyone
     # ships. Nothing else here needs Linux: rusqlite is on the `bundled`
     # feature, so SQLite is compiled from the vendored amalgamation and no
@@ -50,7 +50,7 @@ jobs:
       #
       # The cache earns more here than in a pure-Rust repo: rusqlite `bundled`
       # compiles the SQLite amalgamation with cc on every cold target dir, and
-      # that is C compilation time before a single ZhiShui crate is touched.
+      # that is C compilation time before a single InvoiceDesk crate is touched.
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: "./src-tauri -> target"

@@ -1,4 +1,4 @@
-//! Provider-agnostic API client logic for ZhiShui's AI features.
+//! Provider-agnostic API client logic for InvoiceDesk's AI features.
 //!
 //! This crate knows nothing about Tauri commands or credential storage - it
 //! just knows how to call a provider's API. The main crate wraps it with
@@ -9,7 +9,7 @@
 //! same reason:
 //!
 //! - **The OAuth flows** (ChatGPT / Claude browser sign-in). Every provider
-//!   ZhiShui supports is a Chinese one, and they all authenticate with an
+//!   InvoiceDesk supports is a Chinese one, and they all authenticate with an
 //!   API key. A PKCE login no UI can reach is dead code in a signed binary.
 //! - **The Responses and Anthropic Messages dialects.** Every provider in
 //!   the catalog exposes an OpenAI **Chat Completions** compatible endpoint -

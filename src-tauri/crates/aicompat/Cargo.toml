@@ -2,7 +2,7 @@
 name = "aicompat"
 version = "0.1.0"
 edition = "2021"
-description = "OpenAI-compatible API client layer for ZhiShui's invoice recognition"
+description = "OpenAI-compatible API client layer for InvoiceDesk's invoice recognition"
 
 [dependencies]
 # rustls rather than native-tls so the binary carries its own TLS stack and

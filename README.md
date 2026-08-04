@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="src-tauri/icons/128x128@2x.png" alt="ZhiShui" width="120" height="120" />
+  <img src="src-tauri/icons/128x128@2x.png" alt="Invoice Desk" width="120" height="120" />
 </p>
 
-<h1 align="center">ZhiShui &nbsp;智税</h1>
+<h1 align="center">Invoice Desk &nbsp;智票</h1>
 
 <p align="center">
   <strong>Turns a pile of Chinese invoices into one reimbursement sheet.</strong><br>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/CatVinci-Studio/ZhiShui/releases/latest"><strong>Download</strong></a> ·
+  <a href="https://github.com/CatVinci-Studio/InvoiceDesk/releases/latest"><strong>Download</strong></a> ·
   <a href="./README.zh.md">中文</a> ·
   <a href="./docs/MANUAL.md">Manual (Chinese)</a>
 </p>
@@ -24,7 +24,7 @@
 
 ## What it is
 
-ZhiShui (智税) is a local-first tool for Chinese VAT invoices (增值税发票). Drop in
+Invoice Desk (智票) is a local-first tool for Chinese VAT invoices (增值税发票). Drop in
 electronic invoices (PDF / OFD / XML) and photos of paper ones, and it reads the
 fields, categorises them, flags anything that may already have been claimed, and
 exports a reimbursement workbook — or fills in your company's own .xlsx form.
@@ -69,17 +69,17 @@ Ollama and a custom OpenAI-compatible endpoint.
 
 ## Install
 
-Download from [Releases](https://github.com/CatVinci-Studio/ZhiShui/releases/latest):
+Download from [Releases](https://github.com/CatVinci-Studio/InvoiceDesk/releases/latest):
 
 | Platform | Package |
 | --- | --- |
-| macOS (Apple silicon) | `ZhiShui_X.Y.Z_aarch64.dmg` |
-| macOS (Intel) | `ZhiShui_X.Y.Z_x64.dmg` |
-| Windows | `ZhiShui_X.Y.Z_x64-setup.exe` |
+| macOS (Apple silicon) | `Invoice Desk_X.Y.Z_aarch64.dmg` |
+| macOS (Intel) | `Invoice Desk_X.Y.Z_x64.dmg` |
+| Windows | `Invoice Desk_X.Y.Z_x64-setup.exe` |
 
 > **The first launch needs one extra step.** The packages are not code-signed:
 >
-> - **macOS** — **right-click** ZhiShui → Open → Open again in the dialog. Once, ever.
+> - **macOS** — **right-click** Invoice Desk → Open → Open again in the dialog. Once, ever.
 > - **Windows** — on "Windows protected your PC", click More info → Run anyway.
 >
 > Nothing is wrong with the download; this is what both systems do with
@@ -88,8 +88,8 @@ Download from [Releases](https://github.com/CatVinci-Studio/ZhiShui/releases/lat
 ## Build from source
 
 ```bash
-git clone https://github.com/CatVinci-Studio/ZhiShui.git
-cd ZhiShui
+git clone https://github.com/CatVinci-Studio/InvoiceDesk.git
+cd InvoiceDesk
 npm install
 
 npm run tauri dev     # dev mode

@@ -198,7 +198,7 @@ function VisionNote({
     // this asks rather than reaches: a shell that wants to route the user
     // claims the event with `preventDefault()`. If nobody does, saying where
     // the setting lives beats a button that visibly does nothing.
-    const request = new CustomEvent("zhishui:open-settings", {
+    const request = new CustomEvent("invoicedesk:open-settings", {
       detail: { section: "ai" },
       cancelable: true,
     });

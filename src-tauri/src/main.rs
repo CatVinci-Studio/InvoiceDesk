@@ -1,3 +1,3 @@
 fn main() {
-    zhishui_lib::run()
+    invoice_desk_lib::run()
 }

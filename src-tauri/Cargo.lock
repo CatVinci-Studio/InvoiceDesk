@@ -2376,6 +2376,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "invoice-desk"
+version = "0.0.2"
+dependencies = [
+ "aicompat",
+ "base64 0.22.1",
+ "calamine",
+ "chrono",
+ "encoding_rs",
+ "image",
+ "lopdf 0.44.0",
+ "pdf-extract",
+ "quick-xml",
+ "regex",
+ "rusqlite",
+ "rust_xlsxwriter",
+ "rxing",
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-opener",
+ "tauri-plugin-process",
+ "tauri-plugin-updater",
+ "tempfile",
+ "tokio",
+ "zip 4.6.1",
+]
+
+[[package]]
 name = "ipnet"
 version = "2.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6911,37 +6942,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.119",
-]
-
-[[package]]
-name = "zhishui"
-version = "0.0.1"
-dependencies = [
- "aicompat",
- "base64 0.22.1",
- "calamine",
- "chrono",
- "encoding_rs",
- "image",
- "lopdf 0.44.0",
- "pdf-extract",
- "quick-xml",
- "regex",
- "rusqlite",
- "rust_xlsxwriter",
- "rxing",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-opener",
- "tauri-plugin-process",
- "tauri-plugin-updater",
- "tempfile",
- "tokio",
- "zip 4.6.1",
 ]
 
 [[package]]

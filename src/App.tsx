@@ -90,9 +90,9 @@ function Shell() {
       event.preventDefault();
       setView({ kind: "settings" });
     };
-    window.addEventListener("zhishui:open-settings", onOpenSettings);
+    window.addEventListener("invoicedesk:open-settings", onOpenSettings);
     return () =>
-      window.removeEventListener("zhishui:open-settings", onOpenSettings);
+      window.removeEventListener("invoicedesk:open-settings", onOpenSettings);
   }, []);
 
   const sidebar = useMemo(
@@ -164,7 +164,7 @@ function Shell() {
   return (
     <div className="app-shell">
       <div className="window-bar" data-tauri-drag-region>
-        <span className="window-bar-title">智税</span>
+        <span className="window-bar-title">智票</span>
         <span className="window-bar-spacer" />
         {counts.all > 0 && (
           <span className="window-bar-stat">

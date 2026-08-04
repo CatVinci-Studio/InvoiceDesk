@@ -1,6 +1,6 @@
 # 发布流程
 
-智税只发 macOS 与 Windows 两个平台，没有 Linux 构建。发布由
+智票只发 macOS 与 Windows 两个平台，没有 Linux 构建。发布由
 `.github/workflows/release.yml` 在收到 `v*.*.*` 标签时自动完成，本文档说的
 是"打标签之前要做对什么"。
 
@@ -43,15 +43,15 @@
 
 跑完之后 Release 页面上应该有：
 
-| 文件                                      | 用途                      |
-| ----------------------------------------- | ------------------------- |
-| `ZhiShui_<版本>_aarch64.dmg`              | macOS，Apple Silicon      |
-| `ZhiShui_<版本>_x64.dmg`                  | macOS，Intel              |
-| `ZhiShui_<版本>_x64-setup.exe`            | Windows，NSIS 安装包      |
-| `ZhiShui_<版本>_aarch64.app.tar.gz(.sig)` | 更新器用（Apple Silicon） |
-| `ZhiShui_<版本>_x64.app.tar.gz(.sig)`     | 更新器用（Intel）         |
-| `ZhiShui_<版本>_x64-setup.nsis.zip(.sig)` | 更新器用（Windows）       |
-| `latest.json`                             | 更新器清单                |
+| 文件                                           | 用途                      |
+| ---------------------------------------------- | ------------------------- |
+| `Invoice Desk_<版本>_aarch64.dmg`              | macOS，Apple Silicon      |
+| `Invoice Desk_<版本>_x64.dmg`                  | macOS，Intel              |
+| `Invoice Desk_<版本>_x64-setup.exe`            | Windows，NSIS 安装包      |
+| `Invoice Desk_<版本>_aarch64.app.tar.gz(.sig)` | 更新器用（Apple Silicon） |
+| `Invoice Desk_<版本>_x64.app.tar.gz(.sig)`     | 更新器用（Intel）         |
+| `Invoice Desk_<版本>_x64-setup.nsis.zip(.sig)` | 更新器用（Windows）       |
+| `latest.json`                                  | 更新器清单                |
 
 Windows 只出 NSIS `.exe`，不出 MSI——两种安装器注册在不同的位置，谁也认不出
 对方装的那份，用户装过一次 `.msi` 之后就再也没法被 `.exe` 覆盖升级。原因和
@@ -100,7 +100,7 @@ Settings → Secrets and variables → Actions。`GITHUB_TOKEN` 由 Actions 自�
 
 ### 代码签名：**没有，这是故意的**
 
-智税不做 macOS 签名公证，也不做 Windows 代码签名。发布的就是普通的未签名
+智票不做 macOS 签名公证，也不做 Windows 代码签名。发布的就是普通的未签名
 `.dmg` 和 `.exe`。
 
 这不是待办事项，是一个权衡的结果：Apple 开发者账号每年 99 美元，Windows 的
@@ -125,16 +125,16 @@ OV/EV 证书更贵，而这个工具的用户群体很清楚自己在装什么�
 验不过更新签名，只能让用户手动重装。
 
 ```sh
-npm run tauri -- signer generate -w ~/.tauri/zhishui_updater.key
+npm run tauri -- signer generate -w ~/.tauri/invoicedesk_updater.key
 ```
 
 命令产出两样东西：
 
-- **私钥**（`~/.tauri/zhishui_updater.key`）——整份内容贴进
+- **私钥**（`~/.tauri/invoicedesk_updater.key`）——整份内容贴进
   `TAURI_SIGNING_PRIVATE_KEY`，口令贴进
   `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`。
 - **公钥**（命令输出里的 Public key，也存在
-  `~/.tauri/zhishui_updater.key.pub`）——填进
+  `~/.tauri/invoicedesk_updater.key.pub`）——填进
   `src-tauri/tauri.conf.json` 的 `plugins.updater.pubkey`。
 
 该字段现在还是占位符 `REPLACE_WITH_MINISIGN_PUBKEY`，**首次发布前必须替
@@ -146,7 +146,7 @@ npm run tauri -- signer generate -w ~/.tauri/zhishui_updater.key
 ## 六、发布后自查
 
 ```sh
-curl -sSL https://github.com/CatVinci-Studio/ZhiShui/releases/latest/download/latest.json
+curl -sSL https://github.com/CatVinci-Studio/InvoiceDesk/releases/latest/download/latest.json
 ```
 
 确认三件事：

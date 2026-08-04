@@ -3,7 +3,7 @@
   "app": {
     "windows": [
       {
-        "title": "智税",
+        "title": "智票",
         "width": 1180,
         "height": 760,
         "minWidth": 900,
