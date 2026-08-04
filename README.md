@@ -85,6 +85,18 @@ Download from [Releases](https://github.com/CatVinci-Studio/InvoiceDesk/releases
 > Nothing is wrong with the download; this is what both systems do with
 > unsigned applications.
 
+## Getting started
+
+1. Drop this month's invoice files — or the whole folder — onto the window.
+2. When the import finishes, look at **待复核** and **疑似重复** in the
+   sidebar. Those two are the only rows that need a person; everything else is
+   already usable.
+3. Adjust the categorisation rules under **分类规则** if anything landed in the
+   wrong bucket, then hit 重新分类全部发票.
+4. Create a sheet under **报销单**, tick the invoices to claim, and export.
+
+The full manual is [docs/MANUAL.md](./docs/MANUAL.md) (Chinese).
+
 ## Build from source
 
 ```bash
