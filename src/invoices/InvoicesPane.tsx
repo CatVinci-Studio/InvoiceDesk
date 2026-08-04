@@ -566,7 +566,7 @@ export function InvoicesPane({
             </>
           }
         >
-          只从 ZhiShui 的账本里删除这些记录，原始文件不会被动。
+          只从智税的账本里删除这些记录，原始文件不会被动。
         </Modal>
       )}
     </div>

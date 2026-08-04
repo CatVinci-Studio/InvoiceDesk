@@ -254,7 +254,7 @@ function AiSection() {
     <>
       <Group
         title="发送到 AI 的内容"
-        hint="两个开关默认都是关闭的。全部关闭时，ZhiShui 只用二维码、PDF 文本层和本机规则处理发票，不联网。"
+        hint="两个开关默认都是关闭的。全部关闭时，智税只用二维码、PDF 文本层和本机规则处理发票，不联网。"
       >
         <Row
           label="用 AI 识别拍照/扫描的发票"
@@ -597,13 +597,13 @@ function AboutSection() {
             sentence - which in a paragraph with no word spaces shows up as a
             gap in the middle of a clause. */}
         <p className="settings-about">
-          {"ZhiShui 批量识别增值税电子发票（PDF / OFD）与纸质发票照片，" +
+          {"智税批量识别增值税电子发票（PDF / OFD）与纸质发票照片，" +
             "自动分类、查重，并导出报销明细表。"}
         </p>
         <p className="settings-about">
           {"所有发票、识别结果和分类规则都保存在这台电脑上，不经过任何服务器。" +
             "只有在你打开上面「AI 识别」里的开关之后，对应的内容才会发送到你自己配置的服务商；" +
-            "两个开关都关闭时，除了检查更新，ZhiShui 不会向外发起任何网络请求。"}
+            "两个开关都关闭时，除了检查更新，智税不会向外发起任何网络请求。"}
         </p>
       </Group>
 
