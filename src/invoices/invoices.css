@@ -180,13 +180,17 @@
   color: var(--text);
 }
 
+/* ChevronIcon points RIGHT at rest, so the rotations decide which way the
+   caret reads. They were swapped: a descending list (2024/03/17 at the top,
+   newest first) was showing an up arrow, which every table in every other
+   app reads as ascending. Down = descending, up = ascending. */
 .th-sort-icon {
-  transform: rotate(90deg);
+  transform: rotate(-90deg);
   transition: transform 0.12s ease;
 }
 
 .th-sort-icon-desc {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 
 /* The inactive columns keep their caret, at a weight that says "you could
