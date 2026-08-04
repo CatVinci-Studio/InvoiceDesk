@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <img alt="platform" src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey">
+  <img alt="platform" src="https://img.shields.io/badge/platform-macOS%20(Apple%20silicon)%20%7C%20Windows-lightgrey">
   <a href="./LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-yellow"></a>
 </p>
 
@@ -67,9 +67,11 @@ AI 服务商只收录国内厂商：阿里云百炼（通义千问）、智谱 G
 
 | 平台 | 安装包 |
 | --- | --- |
-| macOS（Apple 芯片） | `Invoice.Desk_X.Y.Z_aarch64.dmg` |
-| macOS（Intel 芯片） | `Invoice.Desk_X.Y.Z_x64.dmg` |
-| Windows | `Invoice.Desk_X.Y.Z_x64-setup.exe` |
+| macOS（Apple 芯片，M 系列） | `Invoice.Desk_X.Y.Z_aarch64.dmg` |
+| Windows（64 位） | `Invoice.Desk_X.Y.Z_x64-setup.exe` |
+
+> **macOS 目前只支持 Apple 芯片。** Intel 芯片的 Mac 装不了——Rosetta 只能把
+> x86 翻译成 arm，反过来不行。
 
 > **第一次打开需要多一步。** 安装包没有做代码签名，所以：
 >

@@ -35,8 +35,7 @@
    git push origin main --follow-tags
    ```
 
-5. 到 Actions → Release 看三个并行 job：macOS aarch64、macOS x86_64、
-   Windows。首次构建较慢——`rusqlite` 用的是 `bundled`，SQLite 要从 C 源码
+5. 到 Actions → Release 看两个并行 job：macOS aarch64、Windows。首次构建较慢——`rusqlite` 用的是 `bundled`，SQLite 要从 C 源码
    编译；之后有 Rust 缓存会快很多。
 
 ### 产物清单
@@ -51,10 +50,8 @@
 | 文件                                           | 用途                      |
 | ---------------------------------------------- | ------------------------- |
 | `Invoice Desk_<版本>_aarch64.dmg`              | macOS，Apple Silicon      |
-| `Invoice Desk_<版本>_x64.dmg`                  | macOS，Intel              |
 | `Invoice Desk_<版本>_x64-setup.exe`            | Windows，NSIS 安装包      |
 | `Invoice Desk_<版本>_aarch64.app.tar.gz(.sig)` | 更新器用（Apple Silicon） |
-| `Invoice Desk_<版本>_x64.app.tar.gz(.sig)`     | 更新器用（Intel）         |
 | `Invoice Desk_<版本>_x64-setup.nsis.zip(.sig)` | 更新器用（Windows）       |
 | `latest.json`                                  | 更新器清单                |
 
@@ -62,8 +59,8 @@ Windows 只出 NSIS `.exe`，不出 MSI——两种安装器注册在不同的�
 对方装的那份，用户装过一次 `.msi` 之后就再也没法被 `.exe` 覆盖升级。原因和
 细节写在 `src-tauri/tauri.windows.conf.json` 与 `release.yml` 的注释里。
 
-`latest.json` 里必须同时有 `darwin-aarch64`、`darwin-x86_64`、
-`windows-x86_64` 三个键。三个 job 是并行写同一个 `latest.json` 的，写法是
+`latest.json` 里必须同时有 `darwin-aarch64`、
+`windows-x86_64` 两个键。两个 job 是并行写同一个 `latest.json` 的，写法是
 "把 Release 上已有的那份读回来、合并、再传上去"，不是覆盖。所以某个 job 失
 败时，结果是 `latest.json` 少一个平台键、该平台用户收不到更新——**重跑失败
 的那个 job 就行，不用重新打标签**。
@@ -157,7 +154,7 @@ curl -sSL https://github.com/CatVinci-Studio/InvoiceDesk/releases/latest/downloa
 确认三件事：
 
 1. `version` 是本次发布的版本；
-2. `platforms` 里 `darwin-aarch64`、`darwin-x86_64`、`windows-x86_64` 都在；
+2. `platforms` 里 `darwin-aarch64`、`windows-x86_64` 都在；
 3. 拿上一个版本装一次，能收到更新提示并成功升级。
 
 发预发布标签时这个 URL 应当**仍然**返回上一个稳定版——如果它返回了 rc，说明

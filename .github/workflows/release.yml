@@ -15,39 +15,27 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # macOS ships TWO native builds rather than one universal binary.
+          # macOS is Apple Silicon only, matching Levis's matrix.
           #
-          # Both routes work as far as the updater is concerned, so the choice
-          # is on cost. tauri-plugin-updater only ever looks up `{os}-{arch}`
-          # (and `{os}-{arch}-{installer}`) in latest.json - there is no
-          # `darwin-universal` key it falls back to - and tauri-action papers
-          # over that by writing a universal build's URL into BOTH the
-          # darwin-aarch64 and darwin-x86_64 entries. So a universal build
-          # updates Intel Macs fine; it just hands every Apple Silicon user an
-          # x86_64 slice they will never execute, roughly doubling the download
-          # for everyone. It also compiles the whole tree twice inside one job
-          # (rusqlite's bundled SQLite included), so it is serial where two
-          # matrix entries are parallel.
+          # An Intel entry was here briefly and has been dropped. The reason
+          # it is not worth its slot: an arm64 build cannot run on an Intel
+          # Mac (Rosetta translates x86 to arm, never the other way), so
+          # supporting Intel means a genuinely separate build, a second cold
+          # compile of rusqlite's bundled SQLite, and a second artifact on the
+          # release page that most visitors have to read past. Apple stopped
+          # selling Intel Macs in 2023.
           #
-          # The usual objection to splitting - two jobs writing one release -
-          # does not apply. tauri-action renames the macOS updater bundle to
-          # `Invoice Desk_<version>_<arch>.app.tar.gz`, so aarch64 and x64 never
-          # collide on an asset name, and latest.json is merged rather than
-          # replaced: each job re-downloads the copy already on the release and
-          # adds its own platform key. That is the same mechanism the three
-          # platforms in Levis's matrix already rely on.
-          #
-          # The cost is real but small: two notarization submissions per
-          # release instead of one.
-          #
-          # Intel is here because the audience is finance staff, who run older
-          # hardware for longer than developers do.
+          # If Intel is wanted again, add back:
+          #   - platform: macos-latest
+          #     target: x86_64-apple-darwin
+          #     args: --target x86_64-apple-darwin
+          # tauri-action names the macOS updater bundle per architecture, so
+          # the two jobs cannot collide on an asset name, and latest.json is
+          # merged rather than replaced - each job re-downloads the copy
+          # already on the release and adds its own platform key.
           - platform: macos-latest
             target: aarch64-apple-darwin
             args: --target aarch64-apple-darwin
-          - platform: macos-latest
-            target: x86_64-apple-darwin
-            args: --target x86_64-apple-darwin
 
           # Windows ships the NSIS .exe and nothing else; the target list
           # itself lives in src-tauri/tauri.windows.conf.json, so a local
@@ -84,11 +72,10 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./src-tauri -> target"
-          # Without this the two macOS entries share a cache key - same runner
-          # OS, same job, same Cargo.lock - and would keep restoring each
-          # other's target dir, so every run starts by rebuilding the arch it
-          # is not. Worth avoiding here in particular: rusqlite `bundled`
-          # recompiles the SQLite amalgamation from C for each architecture.
+          # Keyed by target so the macOS and Windows jobs cannot restore each
+          # other's target dir. Matters more than usual here: rusqlite
+          # `bundled` recompiles the SQLite amalgamation from C, which is the
+          # slowest thing in the build.
           key: ${{ matrix.target }}
 
       - name: Install Node.js

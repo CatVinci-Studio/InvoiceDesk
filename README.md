@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <img alt="platform" src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey">
+  <img alt="platform" src="https://img.shields.io/badge/platform-macOS%20(Apple%20silicon)%20%7C%20Windows-lightgrey">
   <a href="./LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-yellow"></a>
 </p>
 
@@ -74,8 +74,10 @@ Download from [Releases](https://github.com/CatVinci-Studio/InvoiceDesk/releases
 | Platform | Package |
 | --- | --- |
 | macOS (Apple silicon) | `Invoice.Desk_X.Y.Z_aarch64.dmg` |
-| macOS (Intel) | `Invoice.Desk_X.Y.Z_x64.dmg` |
-| Windows | `Invoice.Desk_X.Y.Z_x64-setup.exe` |
+| Windows (64-bit) | `Invoice.Desk_X.Y.Z_x64-setup.exe` |
+
+> **macOS builds are Apple silicon only.** An Intel Mac cannot run them —
+> Rosetta translates x86 to arm, not the other way round.
 
 > **The first launch needs one extra step.** The packages are not code-signed:
 >

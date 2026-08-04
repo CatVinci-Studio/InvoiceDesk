@@ -59,10 +59,10 @@
 
 ### 2.1 系统要求
 
-| 平台    | 要求                                      |
-| ------- | ----------------------------------------- |
-| macOS   | 11 Big Sur 及以上，Apple Silicon 或 Intel |
-| Windows | Windows 10 1809 及以上，64 位             |
+| 平台    | 要求                                        |
+| ------- | ------------------------------------------- |
+| macOS   | 11 Big Sur 及以上，**Apple 芯片（M 系列）** |
+| Windows | Windows 10 1809 及以上，64 位               |
 
 Windows 需要 WebView2 运行时。绝大多数 Windows 10/11 已预装；如果没有，安装程序会提示。
 
@@ -70,15 +70,15 @@ Windows 需要 WebView2 运行时。绝大多数 Windows 10/11 已预装；如�
 
 到 [Releases](https://github.com/CatVinci-Studio/InvoiceDesk/releases/latest) 下载对应安装包：
 
-| 平台                               | 文件名                             |
-| ---------------------------------- | ---------------------------------- |
-| macOS（Apple Silicon，M 系列芯片） | `Invoice.Desk_0.0.4_aarch64.dmg`   |
-| macOS（Intel 芯片）                | `Invoice.Desk_0.0.4_x64.dmg`       |
-| Windows                            | `Invoice.Desk_0.0.4_x64-setup.exe` |
+| 平台                        | 文件名                             |
+| --------------------------- | ---------------------------------- |
+| macOS（Apple 芯片，M 系列） | `Invoice.Desk_0.0.4_aarch64.dmg`   |
+| Windows（64 位）            | `Invoice.Desk_0.0.4_x64-setup.exe` |
 
 > 文件名里的点不是笔误——GitHub 会把发布文件名中的空格替换成点。
 
-不确定自己 Mac 是哪种芯片：左上角 → 关于本机，「芯片」写 Apple M 开头的选 aarch64，写 Intel 的选 x64。
+**Intel 芯片的 Mac 目前用不了。** 左上角 → 关于本机，「芯片」一栏写 Apple M
+开头的才能装；写 Intel 的装不上——Rosetta 只能把 x86 翻译成 arm，反过来不行。
 
 **macOS：** 打开 dmg，把智票拖进「应用程序」。
 
