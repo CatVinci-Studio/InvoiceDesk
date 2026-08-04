@@ -73,9 +73,9 @@ Download from [Releases](https://github.com/CatVinci-Studio/InvoiceDesk/releases
 
 | Platform | Package |
 | --- | --- |
-| macOS (Apple silicon) | `Invoice Desk_X.Y.Z_aarch64.dmg` |
-| macOS (Intel) | `Invoice Desk_X.Y.Z_x64.dmg` |
-| Windows | `Invoice Desk_X.Y.Z_x64-setup.exe` |
+| macOS (Apple silicon) | `Invoice.Desk_X.Y.Z_aarch64.dmg` |
+| macOS (Intel) | `Invoice.Desk_X.Y.Z_x64.dmg` |
+| Windows | `Invoice.Desk_X.Y.Z_x64-setup.exe` |
 
 > **The first launch needs one extra step.** The packages are not code-signed:
 >

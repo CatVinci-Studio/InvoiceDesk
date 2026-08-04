@@ -72,9 +72,11 @@ Windows 需要 WebView2 运行时。绝大多数 Windows 10/11 已预装；如�
 
 | 平台                               | 文件名                             |
 | ---------------------------------- | ---------------------------------- |
-| macOS（Apple Silicon，M 系列芯片） | `Invoice Desk_0.0.2_aarch64.dmg`   |
-| macOS（Intel 芯片）                | `Invoice Desk_0.0.2_x64.dmg`       |
-| Windows                            | `Invoice Desk_0.0.2_x64-setup.exe` |
+| macOS（Apple Silicon，M 系列芯片） | `Invoice.Desk_0.0.2_aarch64.dmg`   |
+| macOS（Intel 芯片）                | `Invoice.Desk_0.0.2_x64.dmg`       |
+| Windows                            | `Invoice.Desk_0.0.2_x64-setup.exe` |
+
+> 文件名里的点不是笔误——GitHub 会把发布文件名中的空格替换成点。
 
 不确定自己 Mac 是哪种芯片：左上角 → 关于本机，「芯片」写 Apple M 开头的选 aarch64，写 Intel 的选 x64。
 

@@ -67,9 +67,9 @@ AI 服务商只收录国内厂商：阿里云百炼（通义千问）、智谱 G
 
 | 平台 | 安装包 |
 | --- | --- |
-| macOS（Apple 芯片） | `Invoice Desk_X.Y.Z_aarch64.dmg` |
-| macOS（Intel 芯片） | `Invoice Desk_X.Y.Z_x64.dmg` |
-| Windows | `Invoice Desk_X.Y.Z_x64-setup.exe` |
+| macOS（Apple 芯片） | `Invoice.Desk_X.Y.Z_aarch64.dmg` |
+| macOS（Intel 芯片） | `Invoice.Desk_X.Y.Z_x64.dmg` |
+| Windows | `Invoice.Desk_X.Y.Z_x64-setup.exe` |
 
 > **第一次打开需要多一步。** 安装包没有做代码签名，所以：
 >
