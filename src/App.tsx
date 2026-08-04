@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ImportOverlay, useImport } from "./ingest/useImport";
+import { useAppUpdate } from "./utils/useAppUpdate";
 import { InvoicesPane } from "./invoices/InvoicesPane";
 import { ReportsPane } from "./reports/ReportsPane";
 import { RulesPane } from "./rules/RulesPane";
@@ -73,6 +74,10 @@ function Shell() {
   // dropped from any pane - which is how people actually use it: they are
   // looking at last month's list when the new invoices arrive by mail.
   const importer = useImport(refreshCounts);
+
+  // Checked on launch and every few hours. The banner below is the only thing
+  // it can put on screen, and only when there is genuinely a newer build.
+  const appUpdate = useAppUpdate();
 
   useEffect(() => {
     void refreshCounts();
@@ -220,7 +225,44 @@ function Shell() {
         </main>
       </div>
 
+      {appUpdate.status !== "idle" && appUpdate.status !== "checking" && (
+        <UpdateBanner update={appUpdate} />
+      )}
+
       <ImportOverlay importer={importer} />
+    </div>
+  );
+}
+
+/**
+ * The update prompt.
+ *
+ * A strip along the bottom rather than a modal: nothing about a new version
+ * is urgent enough to interrupt someone mid-way through reviewing a month of
+ * invoices, and a dialog they have to dismiss to keep working is exactly how
+ * an update prompt trains people to click "later" without reading.
+ */
+function UpdateBanner({ update }: { update: ReturnType<typeof useAppUpdate> }) {
+  const downloading = update.status === "downloading";
+  return (
+    <div className="update-banner">
+      <span className="update-banner-text">
+        {update.status === "error"
+          ? `更新失败：${update.error ?? "未知错误"}`
+          : `有新版本 ${update.version}`}
+      </span>
+      {update.status !== "error" && (
+        <Button
+          intent="primary"
+          onClick={() => void update.install()}
+          disabled={downloading}
+        >
+          {downloading ? "下载中…" : "更新并重启"}
+        </Button>
+      )}
+      <Button onClick={update.dismiss} disabled={downloading}>
+        {update.status === "error" ? "知道了" : "以后再说"}
+      </Button>
     </div>
   );
 }

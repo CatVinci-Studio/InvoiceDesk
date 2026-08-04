@@ -383,3 +383,29 @@ textarea {
   max-width: 42ch;
   line-height: 1.7;
 }
+
+/* ---------------------------------------------------------------------------
+   Update banner
+   A strip along the bottom, not a dialog. See UpdateBanner in App.tsx for why.
+   --------------------------------------------------------------------------- */
+
+.update-banner {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px 9px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  font-size: 12.5px;
+}
+
+.update-banner-text {
+  color: var(--text);
+}

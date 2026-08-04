@@ -50,6 +50,7 @@ import {
   APP_VERSION,
   LEDGER_FILE_NAME,
 } from "./app-info";
+import { useAppUpdate } from "../utils/useAppUpdate";
 import { providerEntry, useProviderCatalog } from "./provider-catalog";
 import {
   applyTheme,
@@ -569,6 +570,10 @@ function AppearanceSection() {
 
 function AboutSection() {
   const toast = useToast();
+  // Its own instance rather than one threaded down from the shell: the hook's
+  // periodic check is idempotent, and the banner state it drives is separate
+  // from the answer a button press deserves.
+  const update = useAppUpdate();
 
   // Resolved rather than described: "应用数据目录" is not something a user can
   // type into Finder, and the whole point of showing it is that they can back
@@ -591,6 +596,21 @@ function AboutSection() {
       <Group title="关于">
         <Row label={APP_NAME} hint={APP_VENDOR}>
           <span className="tnum">{APP_VERSION}</span>
+        </Row>
+        <Row
+          label="检查更新"
+          hint="安装新版本前会先问你。启动时也会自动检查一次。"
+        >
+          <Button
+            onClick={() => {
+              // A user-initiated check owes an answer either way, including
+              // "已经是最新版本" - see the note in useAppUpdate.
+              void update.checkNow().then((message) => toast(message));
+            }}
+            disabled={update.status === "checking"}
+          >
+            {update.status === "checking" ? "检查中…" : "检查更新"}
+          </Button>
         </Row>
         {/* String literals, not JSX text: prettier re-wraps long Chinese
             lines, and every wrap point becomes a space in the rendered
